@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dark Files — Admin</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #080810;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #ccc;
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: #0e0e1a;
+      border: 0.5px solid #1e1e2e;
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .login-title {
+      font-size: 18px; font-weight: 800; color: #f0f0f0;
+      letter-spacing: -0.02em; text-align: center;
+    }
+    .login-title span { color: #8b0000; }
+    .login-box label { font-size: 11px; letter-spacing: 0.15em; color: #444; text-transform: uppercase; display: block; margin-bottom: 5px; }
+    .login-box input {
+      width: 100%; background: #080810; border: 0.5px solid #2a2a3a;
+      border-radius: 6px; padding: 10px 12px; color: #f0f0f0;
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .login-box input:focus { border-color: #8b0000; }
+    .login-btn {
+      width: 100%; padding: 11px; background: #8b0000; border: none;
+      border-radius: 6px; color: #fff; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: #a00000; }
+    .login-error { font-size: 12px; color: #e24b4b; text-align: center; display: none; }
+
+    /* ── ADMIN PANEL ── */
+    #admin-screen { display: none; }
+
+    .topbar {
+      background: #0a0a14; border-bottom: 0.5px solid #1e1e2e;
+      padding: 14px 2rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-title { font-size: 15px; font-weight: 800; color: #f0f0f0; letter-spacing: -0.01em; }
+    .topbar-title span { color: #8b0000; }
+    .logout-btn {
+      background: transparent; border: 0.5px solid #2a2a3a; border-radius: 6px;
+      padding: 6px 14px; color: #666; font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; transition: color 0.2s, border-color 0.2s;
+    }
+    .logout-btn:hover { color: #f0f0f0; border-color: #555; }
+
+    .admin-body { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    .section {
+      background: #0e0e1a; border: 0.5px solid #1e1e2e; border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .section-title {
+      font-size: 11px; letter-spacing: 0.2em; color: #8b0000; text-transform: uppercase;
+      margin-bottom: 1.2rem; padding-bottom: 0.7rem; border-bottom: 0.5px solid #1e1e2e;
+    }
+    .field { margin-bottom: 1.1rem; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { font-size: 11px; letter-spacing: 0.12em; color: #555; text-transform: uppercase; display: block; margin-bottom: 6px; }
+    .field input, .field textarea {
+      width: 100%; background: #080810; border: 0.5px solid #2a2a3a;
+      border-radius: 6px; padding: 10px 12px; color: #f0f0f0;
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .field input:focus, .field textarea:focus { border-color: #8b0000; }
+    .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    .field .hint { font-size: 11px; color: #333; margin-top: 5px; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .save-btn {
+      width: 100%; padding: 13px; background: #8b0000; border: none;
+      border-radius: 6px; color: #fff; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .save-btn:hover { background: #a00000; }
+
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      background: #1a2a1a; border: 0.5px solid #3b6d11; border-radius: 6px;
+      padding: 10px 20px; font-size: 12px; color: #97c459;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; }
+
+    .preview-link {
+      display: inline-block; font-size: 11px; color: #444; letter-spacing: 0.1em;
+      text-transform: uppercase; text-decoration: none; margin-top: 0.5rem;
+      transition: color 0.2s;
+    }
+    .preview-link:hover { color: #8b0000; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-title">DARK <span>FILES</span> — Admin</div>
+      <div>
+        <label>Username</label>
+        <input type="text" id="u" placeholder="username" autocomplete="off" />
+      </div>
+      <div>
+        <label>Password</label>
+        <input type="password" id="p" placeholder="password" />
+      </div>
+      <div class="login-error" id="login-error">Incorrect credentials.</div>
+      <button class="login-btn" onclick="doLogin()">Enter</button>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="admin-screen">
+    <div class="topbar">
+      <div class="topbar-title">DARK <span>FILES</span> — Admin Panel</div>
+      <button class="logout-btn" onclick="doLogout()">Log out</button>
+    </div>
+
+    <div class="admin-body">
+
+      <!-- COUNTDOWN TARGET -->
+      <div class="section">
+        <div class="section-title">Countdown Target</div>
+        <div class="field">
+          <label>End Date &amp; Time</label>
+          <input type="datetime-local" id="f-date" />
+          <div class="hint">Set the exact date and time the countdown hits zero.</div>
+        </div>
+        <div class="field">
+          <label>Timezone Offset</label>
+          <input type="text" id="f-tz" placeholder="-05:00" />
+          <div class="hint">EST = -05:00 &nbsp;|&nbsp; EDT = -04:00 &nbsp;|&nbsp; UTC = +00:00</div>
+        </div>
+      </div>
+
+      <!-- PAGE TEXT -->
+      <div class="section">
+        <div class="section-title">Page Text</div>
+        <div class="field">
+          <label>Eyebrow Text</label>
+          <input type="text" id="f-eyebrow" placeholder="classified /// eyes only" />
+        </div>
+        <div class="field">
+          <label>Tagline (below logo)</label>
+          <input type="text" id="f-tagline" placeholder="Friday · April 24 · 5:30 PM EST" />
+        </div>
+        <div class="field">
+          <label>Twitch Username</label>
+          <input type="text" id="f-twitch" placeholder="not_darkarrow" />
+        </div>
+      </div>
+
+      <!-- WHEN TIMER ENDS -->
+      <div class="section">
+        <div class="section-title">When Timer Ends</div>
+        <div class="field">
+          <label>Big message (shown when countdown hits zero)</label>
+          <input type="text" id="f-ended" placeholder="It's time." />
+        </div>
+        <div class="field">
+          <label>Reveal Text (optional paragraph below message)</label>
+          <textarea id="f-revealtext" placeholder="Write anything you want to show after the countdown ends..."></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Button Label</label>
+            <input type="text" id="f-linklabel" placeholder="Watch Now" />
+          </div>
+          <div class="field">
+            <label>Button URL</label>
+            <input type="text" id="f-linkurl" placeholder="https://twitch.tv/not_darkarrow" />
+          </div>
+        </div>
+        <div class="hint" style="margin-top:6px">Leave button fields empty to show no button.</div>
+      </div>
+
+      <button class="save-btn" onclick="saveSettings()">Save Changes</button>
+      <a href="/" class="preview-link">← View live site</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Saved!</div>
+
+  <script>
+    const CREDS = { username: 'xander', password: 'xander' };
+
+    const KEYS = ['targetDate','targetTZ','tagline','eyebrow','twitchName','endedMessage','revealText','revealLinkLabel','revealLinkURL'];
+
+    const DEFAULTS = {
+      targetDate: '2026-04-24T17:30:00',
+      targetTZ: '-05:00',
+      tagline: 'Friday · April 24 · 5:30 PM EST',
+      eyebrow: 'classified /// eyes only',
+      twitchName: 'not_darkarrow',
+      endedMessage: "It's time.",
+      revealText: '',
+      revealLinkLabel: '',
+      revealLinkURL: '',
+    };
+
+    function getSettings() {
+      try { return JSON.parse(localStorage.getItem('darkfiles_settings')) || {}; }
+      catch { return {}; }
+    }
+
+    function doLogin() {
+      const u = document.getElementById('u').value.trim();
+      const p = document.getElementById('p').value;
+      if (u === CREDS.username && p === CREDS.password) {
+        sessionStorage.setItem('df_auth', '1');
+        showAdmin();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+
+    document.getElementById('p').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    document.getElementById('u').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+    function doLogout() {
+      sessionStorage.removeItem('df_auth');
+      document.getElementById('admin-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    function showAdmin() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      loadFields();
+    }
+
+    function loadFields() {
+      const s = getSettings();
+      function v(k) { return s[k] !== undefined ? s[k] : DEFAULTS[k]; }
+      document.getElementById('f-date').value = v('targetDate');
+      document.getElementById('f-tz').value = v('targetTZ');
+      document.getElementById('f-tagline').value = v('tagline');
+      document.getElementById('f-eyebrow').value = v('eyebrow');
+      document.getElementById('f-twitch').value = v('twitchName');
+      document.getElementById('f-ended').value = v('endedMessage');
+      document.getElementById('f-revealtext').value = v('revealText');
+      document.getElementById('f-linklabel').value = v('revealLinkLabel');
+      document.getElementById('f-linkurl').value = v('revealLinkURL');
+    }
+
+    function saveSettings() {
+      const settings = {
+        targetDate: document.getElementById('f-date').value || DEFAULTS.targetDate,
+        targetTZ: document.getElementById('f-tz').value || DEFAULTS.targetTZ,
+        tagline: document.getElementById('f-tagline').value,
+        eyebrow: document.getElementById('f-eyebrow').value,
+        twitchName: document.getElementById('f-twitch').value,
+        endedMessage: document.getElementById('f-ended').value,
+        revealText: document.getElementById('f-revealtext').value,
+        revealLinkLabel: document.getElementById('f-linklabel').value,
+        revealLinkURL: document.getElementById('f-linkurl').value,
+      };
+      localStorage.setItem('darkfiles_settings', JSON.stringify(settings));
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    if (sessionStorage.getItem('df_auth') === '1') {
+      showAdmin();
+    }
+  </script>
+</body>
+</html>

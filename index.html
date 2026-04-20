@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dark Files</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #080810;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+    .scanlines {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+      pointer-events: none; z-index: 1;
+    }
+    .corner { position: fixed; width: 22px; height: 22px; z-index: 2; }
+    .corner.tl { top: 24px; left: 24px; border-top: 1.5px solid #8b0000; border-left: 1.5px solid #8b0000; }
+    .corner.tr { top: 24px; right: 24px; border-top: 1.5px solid #8b0000; border-right: 1.5px solid #8b0000; }
+    .corner.bl { bottom: 24px; left: 24px; border-bottom: 1.5px solid #8b0000; border-left: 1.5px solid #8b0000; }
+    .corner.br { bottom: 24px; right: 24px; border-bottom: 1.5px solid #8b0000; border-right: 1.5px solid #8b0000; }
+    .content {
+      position: relative; z-index: 3;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 2rem 1.5rem;
+    }
+    .eyebrow { font-size: 10px; letter-spacing: 0.35em; color: #444; text-transform: uppercase; margin-bottom: 1.4rem; }
+    .logo { font-size: clamp(42px, 8vw, 72px); font-weight: 900; letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.5rem; text-align: center; }
+    .logo-dark { color: #f0f0f0; }
+    .logo-files { color: #8b0000; }
+    #tagline { font-size: 11px; color: #444; letter-spacing: 0.2em; text-transform: uppercase; text-align: center; margin-bottom: 0.9rem; }
+    .twitch-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #0e0e1a; border: 0.5px solid #1e1e2e; border-radius: 20px;
+      padding: 6px 14px; margin-bottom: 2.8rem; text-decoration: none;
+    }
+    .twitch-icon { width: 14px; height: 14px; fill: #9147ff; }
+    .twitch-name { font-size: 12px; color: #9147ff; letter-spacing: 0.05em; }
+    .countdown { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 2.8rem; }
+    .unit { display: flex; flex-direction: column; align-items: center; }
+    .box {
+      background: #0c0c18; border: 0.5px solid #1a1a2a; border-radius: 8px;
+      padding: 18px 6px 14px; min-width: 80px; text-align: center; position: relative;
+    }
+    .box::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: #8b0000; border-radius: 0 0 8px 8px; opacity: 0.6;
+    }
+    .num {
+      font-size: 40px; font-weight: 800; color: #f0f0f0;
+      line-height: 1; font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em; font-family: 'Courier New', monospace;
+    }
+    .lbl { font-size: 9px; letter-spacing: 0.22em; color: #3a3a4a; text-transform: uppercase; margin-top: 6px; }
+    .sep { font-size: 30px; font-weight: 700; color: #1e1e2e; margin-top: 16px; line-height: 1; user-select: none; }
+    .progress-track { width: 300px; height: 2px; background: #12121e; border-radius: 1px; margin-bottom: 2.5rem; }
+    .progress-fill { height: 2px; background: #8b0000; border-radius: 1px; width: 0%; transition: width 0.8s linear; }
+    .status { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #8b0000; animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+    .status-text { font-size: 10px; letter-spacing: 0.25em; color: #2e2e3e; text-transform: uppercase; }
+    #reveal-content { display: none; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; }
+    .ended-msg { font-size: 28px; font-weight: 800; color: #8b0000; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
+    #reveal-text { font-size: 16px; color: #ccc; text-align: center; max-width: 480px; line-height: 1.7; letter-spacing: 0.02em; display: none; }
+    #reveal-link {
+      display: none; margin-top: 0.5rem; padding: 10px 28px;
+      background: #8b0000; color: #fff; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border-radius: 4px;
+    }
+    @media (max-width: 480px) {
+      .box { min-width: 64px; padding: 14px 4px 10px; }
+      .num { font-size: 30px; }
+      .countdown { gap: 6px; }
+      .progress-track { width: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+
+  <div class="content">
+    <div class="eyebrow" id="eyebrow-text">classified &nbsp;///&nbsp; eyes only</div>
+
+    <div class="logo">
+      <span class="logo-dark">DARK</span><span class="logo-files"> FILES</span>
+    </div>
+
+    <div id="tagline">Friday · April 24 · 5:30 PM EST</div>
+
+    <a class="twitch-link" id="twitch-link" href="https://twitch.tv/not_darkarrow" target="_blank">
+      <svg class="twitch-icon" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+      <span class="twitch-name" id="twitch-name">not_darkarrow</span>
+    </a>
+
+    <div class="countdown" id="countdown-wrap">
+      <div class="unit"><div class="box"><div class="num" id="dd">00</div><div class="lbl">days</div></div></div>
+      <div class="sep">:</div>
+      <div class="unit"><div class="box"><div class="num" id="hh">00</div><div class="lbl">hours</div></div></div>
+      <div class="sep">:</div>
+      <div class="unit"><div class="box"><div class="num" id="mm">00</div><div class="lbl">mins</div></div></div>
+      <div class="sep">:</div>
+      <div class="unit"><div class="box"><div class="num" id="ss">00</div><div class="lbl">secs</div></div></div>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="pbar"></div></div>
+
+    <div class="status">
+      <div class="dot"></div>
+      <span class="status-text">live countdown</span>
+      <div class="dot"></div>
+    </div>
+
+    <div id="reveal-content">
+      <div class="ended-msg" id="ended-msg">It's time.</div>
+      <div id="reveal-text"></div>
+      <a id="reveal-link" href="#">Go</a>
+    </div>
+  </div>
+
+  <script>
+    function getSettings() {
+      try { return JSON.parse(localStorage.getItem('darkfiles_settings')) || {}; }
+      catch { return {}; }
+    }
+    const d = {
+      targetDate: '2026-04-24T17:30:00-05:00',
+      tagline: 'Friday · April 24 · 5:30 PM EST',
+      eyebrow: 'classified /// eyes only',
+      twitchName: 'not_darkarrow',
+      endedMessage: "It's time.",
+      revealText: '',
+      revealLinkLabel: '',
+      revealLinkURL: '',
+    };
+    function s(k) { const st = getSettings(); return st[k] !== undefined ? st[k] : d[k]; }
+
+    document.getElementById('tagline').textContent = s('tagline');
+    document.getElementById('eyebrow-text').textContent = s('eyebrow');
+    document.getElementById('twitch-name').textContent = s('twitchName');
+    document.getElementById('twitch-link').href = 'https://twitch.tv/' + s('twitchName');
+
+    const target = new Date(s('targetDate')).getTime();
+    const totalMs = Math.max(1, target - Date.now());
+
+    function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
+
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        document.getElementById('countdown-wrap').style.display = 'none';
+        document.querySelector('.progress-track').style.display = 'none';
+        document.querySelector('.status').style.display = 'none';
+        const rc = document.getElementById('reveal-content');
+        rc.style.display = 'flex';
+        document.getElementById('ended-msg').textContent = s('endedMessage');
+        const rt = s('revealText');
+        if (rt) { document.getElementById('reveal-text').textContent = rt; document.getElementById('reveal-text').style.display = 'block'; }
+        const rl = s('revealLinkURL');
+        if (rl) { const a = document.getElementById('reveal-link'); a.href = rl; a.textContent = s('revealLinkLabel') || 'Go'; a.style.display = 'inline-block'; }
+        document.getElementById('pbar').style.width = '100%';
+        return;
+      }
+      document.getElementById('dd').textContent = pad(Math.floor(diff / 86400000));
+      document.getElementById('hh').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      document.getElementById('mm').textContent = pad(Math.floor((diff % 3600000) / 60000));
+      document.getElementById('ss').textContent = pad(Math.floor((diff % 60000) / 1000));
+      document.getElementById('pbar').style.width = Math.min(100, ((totalMs - diff) / totalMs) * 100).toFixed(2) + '%';
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
