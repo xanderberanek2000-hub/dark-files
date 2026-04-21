@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dark Files — not_darkarrow</title>
+  <meta name="description" content="not_darkarrow — Twitch streamer & Minecraft server creator." />
+  <meta property="og:title" content="Dark Files — not_darkarrow" />
+  <meta property="og:description" content="not_darkarrow — Twitch streamer & Minecraft server creator." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#6b21a8" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080810'/><text x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='22' font-weight='900' font-family='Arial' fill='%236b21a8'>D</text></svg>" />
+  <style>
+    :root{--accent:#6b21a8;--accent2:#a855f7;--bg:#080810;--surface:#0e0e1a;--border:#1e1e2e;--text:#f0f0f0;--muted:#555}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;cursor:none}
+
+    /* CURSOR */
+    #cur{position:fixed;width:16px;height:16px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .15s;opacity:.8}
+    #cur.big{width:24px;height:24px;opacity:.4}
+    #curdot{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+
+    /* PARTICLES */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.05) 3px,rgba(0,0,0,0.05) 4px);pointer-events:none;z-index:1}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(8,8,16,0.92);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+    .nav-logo{font-size:16px;font-weight:900;letter-spacing:-0.02em;text-decoration:none;color:var(--text)}
+    .nav-logo span{color:var(--accent)}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-live{background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:7px 16px;border-radius:20px;text-decoration:none;transition:background .2s;white-space:nowrap}
+    .nav-live:hover{background:var(--accent2)}
+    .hamburger{display:none;flex-direction:column;gap:4px;cursor:none;background:none;border:none;padding:4px}
+    .hamburger span{width:20px;height:1.5px;background:var(--muted);display:block;transition:all .2s}
+    .mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:var(--surface);border-bottom:.5px solid var(--border);padding:1rem 2rem;z-index:49;flex-direction:column;gap:1rem}
+    .mobile-menu a{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+    .mobile-menu.open{display:flex}
+
+    /* SECTIONS */
+    section{position:relative;z-index:2;padding:100px 2rem 60px;max-width:1100px;margin:0 auto}
+    section:first-of-type{padding-top:120px}
+
+    .section-eyebrow{font-size:10px;letter-spacing:0.3em;color:var(--accent);text-transform:uppercase;margin-bottom:0.8rem}
+    .section-title{font-size:clamp(28px,5vw,48px);font-weight:900;letter-spacing:-0.02em;line-height:1.05;margin-bottom:1.5rem}
+    .section-title span{color:var(--accent)}
+    .divider{width:40px;height:2px;background:var(--accent);margin-bottom:2rem;border-radius:1px}
+
+    /* HERO */
+    #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;padding-top:56px}
+    .hero-badge{display:inline-block;background:var(--surface);border:.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:10px;letter-spacing:0.25em;color:var(--accent);text-transform:uppercase;margin-bottom:1.5rem}
+    .hero-title{font-size:clamp(48px,10vw,96px);font-weight:900;letter-spacing:-0.04em;line-height:0.95;margin-bottom:1rem}
+    .hero-title .dark{color:var(--text)}
+    .hero-title .arrow{color:var(--accent)}
+    .hero-sub{font-size:16px;color:var(--muted);letter-spacing:0.05em;margin-bottom:2.5rem;max-width:500px}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .btn-primary{background:var(--accent);color:#fff;padding:12px 28px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;transition:background .2s;border:none;cursor:none}
+    .btn-primary:hover{background:var(--accent2)}
+    .btn-secondary{background:transparent;color:var(--text);padding:12px 28px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:.5px solid var(--border);transition:border-color .2s}
+    .btn-secondary:hover{border-color:var(--accent)}
+    .scroll-hint{margin-top:3rem;font-size:10px;letter-spacing:0.2em;color:#2a2a3a;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px}
+    .scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent)}
+
+    /* ABOUT */
+    #about .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+    .about-text p{color:#aaa;line-height:1.8;font-size:15px;margin-bottom:1rem}
+    .about-text p:last-child{margin-bottom:0}
+    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .stat-card{background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center}
+    .stat-num{font-size:28px;font-weight:900;color:var(--accent);letter-spacing:-0.02em;font-family:'Courier New',monospace}
+    .stat-label{font-size:10px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+
+    /* SCHEDULE */
+    #schedule .schedule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .day-card{background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;transition:border-color .2s}
+    .day-card.today{border-color:var(--accent)}
+    .day-card.today .day-name{color:var(--accent)}
+    .day-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.05em;margin-bottom:6px}
+    .day-time{font-size:11px;color:var(--muted);letter-spacing:0.05em}
+    .day-badge{display:inline-block;background:rgba(107,33,168,0.2);border:.5px solid var(--accent);border-radius:10px;padding:2px 8px;font-size:9px;letter-spacing:0.1em;color:var(--accent);text-transform:uppercase;margin-top:6px}
+
+    /* MINECRAFT SERVER */
+    #server .server-card{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:2rem;display:flex;flex-direction:column;gap:1.5rem}
+    .server-ip{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .server-ip-text{font-family:'Courier New',monospace;font-size:16px;color:var(--accent);letter-spacing:0.05em}
+    .copy-btn{background:var(--accent);border:none;border-radius:4px;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;cursor:none;transition:background .2s}
+    .copy-btn:hover{background:var(--accent2)}
+    .server-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+    .feature-pill{background:var(--bg);border:.5px solid var(--border);border-radius:6px;padding:10px 14px;font-size:12px;color:#aaa;display:flex;align-items:center;gap:8px}
+    .feature-pill span{font-size:16px}
+    .tebex-note{font-size:12px;color:var(--muted);line-height:1.6;border-left:2px solid var(--accent);padding-left:12px}
+
+    /* CLIPS */
+    #clips .clips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+    .clip-card{background:var(--surface);border:.5px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+    .clip-card:hover{border-color:var(--accent)}
+    .clip-thumb{width:100%;aspect-ratio:16/9;background:#0c0c18;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .clip-thumb iframe{width:100%;height:100%;border:none}
+    .clip-thumb .play-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:12px;letter-spacing:0.1em;text-transform:uppercase}
+    .play-icon{width:40px;height:40px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .clip-info{padding:12px 14px}
+    .clip-title{font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px}
+    .clip-meta{font-size:11px;color:var(--muted);letter-spacing:0.05em}
+    .clips-edit-note{background:var(--surface);border:.5px dashed var(--border);border-radius:8px;padding:1.5rem;text-align:center;color:var(--muted);font-size:13px;display:none}
+
+    /* GALLERY */
+    #gallery .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+    .gallery-item{background:var(--surface);border:.5px solid var(--border);border-radius:8px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .2s}
+    .gallery-item:hover{border-color:var(--accent)}
+    .gallery-item img{width:100%;height:100%;object-fit:cover}
+    .gallery-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;color:#2a2a3a;font-size:10px;letter-spacing:0.15em;text-transform:uppercase}
+
+    /* SOCIALS */
+    #socials .socials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+    .social-card{background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:14px;text-decoration:none;transition:border-color .2s,transform .2s}
+    .social-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+    .social-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .social-icon svg{width:20px;height:20px}
+    .social-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+    .social-handle{font-size:11px;color:var(--muted);letter-spacing:0.05em}
+    .social-card.hidden{display:none}
+
+    /* MERCH */
+    #merch .merch-card{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:3rem;text-align:center}
+    .merch-soon{font-size:48px;margin-bottom:1rem}
+    .merch-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:0.5rem}
+    .merch-sub{font-size:14px;color:var(--muted);line-height:1.6;max-width:400px;margin:0 auto}
+
+    /* FOOTER */
+    footer{position:relative;z-index:2;border-top:.5px solid var(--border);padding:2rem;text-align:center}
+    .footer-logo{font-size:18px;font-weight:900;color:var(--text);margin-bottom:0.5rem}
+    .footer-logo span{color:var(--accent)}
+    .footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+    .footer-links a{font-size:10px;letter-spacing:0.15em;color:#2a2a3a;text-transform:uppercase;text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-copy{font-size:11px;color:#2a2a3a;margin-top:1rem}
+
+    @media(max-width:768px){
+      #about .about-grid{grid-template-columns:1fr}
+      .nav-links{display:none}
+      .hamburger{display:flex}
+      section{padding:80px 1.2rem 40px}
+    }
+    @media(max-width:480px){
+      .hero-title{font-size:clamp(36px,12vw,64px)}
+      .about-stats{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="scanlines"></div>
+  <div id="cur"></div>
+  <div id="curdot"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">DARK <span>FILES</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#server">Server</a></li>
+      <li><a href="#clips">Clips</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#socials">Socials</a></li>
+      <li><a href="#merch">Merch</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a class="nav-live" id="nav-twitch" href="https://twitch.tv/not_darkarrow" target="_blank">Watch Live</a>
+      <button class="hamburger" onclick="toggleMenu()" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#schedule" onclick="toggleMenu()">Schedule</a>
+    <a href="#server" onclick="toggleMenu()">Server</a>
+    <a href="#clips" onclick="toggleMenu()">Clips</a>
+    <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+    <a href="#socials" onclick="toggleMenu()">Socials</a>
+    <a href="#merch" onclick="toggleMenu()">Merch</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-badge">// the files are open //</div>
+    <h1 class="hero-title">
+      <div class="dark">NOT_</div>
+      <div class="arrow">DARKARROW</div>
+    </h1>
+    <p class="hero-sub" id="hero-sub">Twitch streamer. Minecraft server builder. Two years in and just getting started.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" id="hero-twitch" href="https://twitch.tv/not_darkarrow" target="_blank">Watch on Twitch</a>
+      <a class="btn-secondary" id="hero-discord" href="#socials">Join the Discord</a>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      scroll
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-eyebrow">About</div>
+    <div class="section-title">Who is <span>not_darkarrow</span>?</div>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p id="bio-text">I've been streaming on Twitch as "Darkarrow" for 2+ years and wanted to help grow my audience by creating a public 24/7 Minecraft server. I spent months learning and working on building a Minecraft server inspired by some of my favorite servers and minigames.</p>
+        <p>After making a Minecraft server people can play when I'm not live, someone recommended I use Tebex to handle transactions and make the money back I spent working on this server. I am fully open to any suggestions or help for this server, and I try to keep it fair for players that don't spend money.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card"><div class="stat-num">2+</div><div class="stat-label">Years Streaming</div></div>
+        <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Minecraft Server</div></div>
+        <div class="stat-card"><div class="stat-num">Daily</div><div class="stat-label">Streams</div></div>
+        <div class="stat-card"><div class="stat-num">5:30</div><div class="stat-label">CST Go Live</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule">
+    <div class="section-eyebrow">Schedule</div>
+    <div class="section-title">Stream <span>Schedule</span></div>
+    <div class="divider"></div>
+    <div class="schedule-grid" id="schedule-grid"></div>
+  </section>
+
+  <!-- MINECRAFT SERVER -->
+  <section id="server">
+    <div class="section-eyebrow">Minecraft</div>
+    <div class="section-title">The <span>Server</span></div>
+    <div class="divider"></div>
+    <div class="server-card">
+      <div>
+        <p style="color:#aaa;font-size:14px;line-height:1.7;margin-bottom:1.2rem">A public 24/7 Minecraft server built from the ground up — inspired by favorite servers and minigames. Play even when the stream is offline.</p>
+        <div class="server-ip">
+          <span class="server-ip-text" id="server-ip-text">Coming Soon</span>
+          <button class="copy-btn" onclick="copyIP()">Copy IP</button>
+        </div>
+      </div>
+      <div class="server-features">
+        <div class="feature-pill"><span>⚔️</span> Custom Minigames</div>
+        <div class="feature-pill"><span>🌍</span> Public 24/7</div>
+        <div class="feature-pill"><span>🤝</span> Fair for F2P</div>
+        <div class="feature-pill"><span>💎</span> Tebex Store</div>
+        <div class="feature-pill"><span>🔧</span> Always Improving</div>
+        <div class="feature-pill"><span>💬</span> Community Driven</div>
+      </div>
+      <p class="tebex-note">Transactions are handled through Tebex — a trusted platform for game server monetization. Any purchases help cover server costs while keeping the game fair for all players.</p>
+    </div>
+  </section>
+
+  <!-- CLIPS -->
+  <section id="clips">
+    <div class="section-eyebrow">Highlights</div>
+    <div class="section-title">Best <span>Clips</span></div>
+    <div class="divider"></div>
+    <div class="clips-grid" id="clips-grid"></div>
+    <div class="clips-edit-note" id="clips-edit-note">Clips will appear here once added in the admin panel.</div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-eyebrow">Gallery</div>
+    <div class="section-title">Photo <span>Gallery</span></div>
+    <div class="divider"></div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+
+  <!-- SOCIALS -->
+  <section id="socials">
+    <div class="section-eyebrow">Socials</div>
+    <div class="section-title">Find <span>not_darkarrow</span></div>
+    <div class="divider"></div>
+    <div class="socials-grid" id="socials-grid"></div>
+  </section>
+
+  <!-- MERCH -->
+  <section id="merch">
+    <div class="section-eyebrow">Merch</div>
+    <div class="section-title">The <span>Store</span></div>
+    <div class="divider"></div>
+    <div class="merch-card">
+      <div class="merch-soon">👀</div>
+      <div class="merch-title">Something's in the works...</div>
+      <p class="merch-sub" id="merch-text">Merch might be coming soon. Stay tuned and keep an eye on socials for announcements.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">DARK <span>FILES</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">not_darkarrow</div>
+    <div class="footer-links">
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a>
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 not_darkarrow. All rights reserved.</div>
+  </footer>
+
+<script>
+// ── SETTINGS ──
+function getSettings(){try{return JSON.parse(localStorage.getItem('darkfiles_settings'))||{};}catch{return{};}}
+function s(k,def){const st=getSettings();return st[k]!==undefined?st[k]:def;}
+
+// ── ACCENT ──
+function applyAccent(c){
+  document.documentElement.style.setProperty('--accent',c);
+  const r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);
+  document.documentElement.style.setProperty('--accent2',`rgb(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+80)})`);
+}
+applyAccent(s('accentColor','#6b21a8'));
+
+// ── SOCIALS DATA ──
+const SOCIAL_DEFS=[
+  {key:'twitch',name:'Twitch',handle:'not_darkarrow',icon:`<svg viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>`,color:'rgba(145,71,255,0.15)',def:'https://twitch.tv/not_darkarrow'},
+  {key:'twitter',name:'Twitter / X',handle:'@not_darkarrow',icon:`<svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,color:'rgba(255,255,255,0.08)',def:''},
+  {key:'discord',name:'Discord',handle:'Join the server',icon:`<svg viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>`,color:'rgba(88,101,242,0.15)',def:''},
+  {key:'youtube',name:'YouTube',handle:'not_darkarrow',icon:`<svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,color:'rgba(255,0,0,0.1)',def:''},
+  {key:'tiktok',name:'TikTok',handle:'@not_darkarrow',icon:`<svg viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>`,color:'rgba(255,255,255,0.06)',def:''},
+  {key:'instagram',name:'Instagram',handle:'@not_darkarrow',icon:`<svg viewBox="0 0 24 24" fill="url(#ig)"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="25%" style="stop-color:#e6683c"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="75%" style="stop-color:#cc2366"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,color:'rgba(220,39,67,0.1)',def:''},
+];
+
+function buildSocials(){
+  const grid=document.getElementById('socials-grid');grid.innerHTML='';
+  const st=getSettings();
+  SOCIAL_DEFS.forEach(sd=>{
+    const url=st['social_'+sd.key]||sd.def;
+    if(!url)return;
+    const a=document.createElement('a');
+    a.className='social-card';a.href=url;a.target='_blank';
+    a.style.background=`var(--surface)`;
+    a.innerHTML=`<div class="social-icon" style="background:${sd.color}">${sd.icon}</div><div><div class="social-name">${sd.name}</div><div class="social-handle">${sd.handle}</div></div>`;
+    grid.appendChild(a);
+  });
+  // Update nav/hero twitch link
+  const tw=st['social_twitch']||'https://twitch.tv/not_darkarrow';
+  document.getElementById('nav-twitch').href=tw;
+  document.getElementById('hero-twitch').href=tw;
+  const dc=st['social_discord']||'';
+  if(dc)document.getElementById('hero-discord').href=dc;
+}
+buildSocials();
+
+// ── SERVER IP ──
+const ip=s('serverIP','');
+if(ip){document.getElementById('server-ip-text').textContent=ip;}
+function copyIP(){
+  const ip=document.getElementById('server-ip-text').textContent;
+  if(ip==='Coming Soon')return;
+  navigator.clipboard.writeText(ip).then(()=>{
+    const btn=document.querySelector('.copy-btn');btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy IP',2000);
+  });
+}
+
+// ── SCHEDULE ──
+const days=[
+  {name:'Monday',short:'Mon',weekend:false},
+  {name:'Tuesday',short:'Tue',weekend:false},
+  {name:'Wednesday',short:'Wed',weekend:false},
+  {name:'Thursday',short:'Thu',weekend:false},
+  {name:'Friday',short:'Fri',weekend:false},
+  {name:'Saturday',short:'Sat',weekend:true},
+  {name:'Sunday',short:'Sun',weekend:true},
+];
+const todayIdx=(new Date().getDay()+6)%7;
+const grid=document.getElementById('schedule-grid');
+days.forEach((d,i)=>{
+  const card=document.createElement('div');
+  card.className='day-card'+(i===todayIdx?' today':'');
+  card.innerHTML=`<div class="day-name">${d.name}</div><div class="day-time">${d.weekend?'Extended Stream':'5:30 PM CST'}</div><div class="day-time" style="margin-top:2px">${d.weekend?'Longer Hours':'6:30 PM EST'}</div>${d.weekend?'<div class="day-badge">Long Stream</div>':''}`;
+  grid.appendChild(card);
+});
+
+// ── CLIPS ──
+function buildClips(){
+  const clips=s('revealClips',[]);
+  const cg=document.getElementById('clips-grid');cg.innerHTML='';
+  if(!clips.length){document.getElementById('clips-edit-note').style.display='block';return;}
+  clips.forEach(c=>{
+    const card=document.createElement('div');card.className='clip-card';
+    if(c.url&&c.url.includes('youtube')){
+      const id=c.url.match(/(?:v=|youtu\.be\/)([^&\s]+)/)?.[1];
+      card.innerHTML=`<div class="clip-thumb"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div><div class="clip-info"><div class="clip-title">${c.title||'Clip'}</div><div class="clip-meta">${c.meta||''}</div></div>`;
+    } else if(c.url&&c.url.includes('twitch')){
+      const clip=c.url.split('/').pop();
+      card.innerHTML=`<div class="clip-thumb"><iframe src="https://clips.twitch.tv/embed?clip=${clip}&parent=${location.hostname}" allowfullscreen></iframe></div><div class="clip-info"><div class="clip-title">${c.title||'Clip'}</div><div class="clip-meta">${c.meta||''}</div></div>`;
+    } else {
+      card.innerHTML=`<div class="clip-thumb"><div class="play-placeholder"><div class="play-icon">▶</div>${c.title||'Watch Clip'}</div></div><div class="clip-info"><div class="clip-title">${c.title||'Clip'}</div><div class="clip-meta">${c.meta||''}</div></div>`;
+      card.onclick=()=>window.open(c.url,'_blank');
+    }
+    cg.appendChild(card);
+  });
+}
+buildClips();
+
+// ── GALLERY ──
+function buildGallery(){
+  const imgs=s('galleryImages',[]);
+  const gg=document.getElementById('gallery-grid');gg.innerHTML='';
+  const count=Math.max(imgs.length,6);
+  for(let i=0;i<count;i++){
+    const item=document.createElement('div');item.className='gallery-item';
+    if(imgs[i]){item.innerHTML=`<img src="${imgs[i]}" alt="Gallery ${i+1}" loading="lazy"/>`;}
+    else{item.innerHTML=`<div class="gallery-placeholder"><span style="font-size:24px;color:#1e1e2e">+</span>Add in Admin</div>`;}
+    gg.appendChild(item);
+  }
+}
+buildGallery();
+
+// ── MERCH TEXT ──
+const mt=s('merchText','');
+if(mt)document.getElementById('merch-text').textContent=mt;
+
+// ── BIO ──
+const bio=s('bioText','');
+if(bio)document.getElementById('bio-text').textContent=bio;
+
+// ── HERO SUB ──
+const heroSub=s('heroSubtext','');
+if(heroSub)document.getElementById('hero-sub').textContent=heroSub;
+
+// ── PARTICLES ──
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+function resizeC(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resizeC();window.addEventListener('resize',resizeC);
+const ac=s('accentColor','#6b21a8');
+const pts=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.5+0.3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*.3+.05}));
+function drawP(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(p=>{
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=ac+Math.floor(p.a*255).toString(16).padStart(2,'0');ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+  });requestAnimationFrame(drawP);
+}
+drawP();
+
+// ── CUSTOM CURSOR ──
+const cur=document.getElementById('cur');const dot=document.getElementById('curdot');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';});
+document.addEventListener('mousedown',()=>cur.classList.add('big'));
+document.addEventListener('mouseup',()=>cur.classList.remove('big'));
+
+// ── MOBILE NAV ──
+function toggleMenu(){
+  const m=document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+}
+
+// ── TODAY HIGHLIGHT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  const cards=document.querySelectorAll('.day-card');
+  if(cards[todayIdx])cards[todayIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+});
+</script>
+</body>
+</html>
