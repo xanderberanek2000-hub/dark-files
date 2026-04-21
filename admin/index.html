@@ -3,85 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Darkarrow — Admin</title>
+  <title>darkarrow.lol — Admin</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#080810;min-height:100vh;font-family:'Segoe UI',system-ui,sans-serif;color:#ccc}
     #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center}
-    .login-box{background:#0e0e1a;border:0.5px solid #1e1e2e;border-radius:10px;padding:2.5rem 2rem;width:100%;max-width:360px;display:flex;flex-direction:column;gap:1.2rem}
+    .login-box{background:#0e0e1a;border:.5px solid #1e1e2e;border-radius:10px;padding:2.5rem 2rem;width:100%;max-width:360px;display:flex;flex-direction:column;gap:1.2rem}
     .login-title{font-size:18px;font-weight:800;color:#f0f0f0;text-align:center}
     .login-title span{color:#6b21a8}
-    .login-box label{font-size:11px;letter-spacing:0.15em;color:#444;text-transform:uppercase;display:block;margin-bottom:5px}
-    .login-box input{width:100%;background:#080810;border:0.5px solid #2a2a3a;border-radius:6px;padding:10px 12px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color 0.2s}
-    .login-box input:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:#6b21a8}
-    .login-btn,.save-btn,.golive-btn{background:#6b21a8;border:none;border-radius:6px;color:#fff;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
-    .login-btn:hover,.save-btn:hover,.golive-btn:hover{background:#7c3aed}
-    .login-btn{width:100%;padding:11px;font-size:13px}
-    .save-btn{width:100%;padding:13px;font-size:13px}
-    .golive-btn{padding:7px 16px;font-size:11px}
+    .login-box label{font-size:11px;letter-spacing:.15em;color:#444;text-transform:uppercase;display:block;margin-bottom:5px}
+    .login-box input{width:100%;background:#080810;border:.5px solid #2a2a3a;border-radius:6px;padding:10px 12px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color .2s}
+    .login-box input:focus{border-color:#6b21a8}
+    .login-btn{width:100%;padding:11px;background:#6b21a8;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .login-btn:hover{background:#7c3aed}
     .login-error{font-size:12px;color:#e24b4b;text-align:center;display:none}
     #admin-screen{display:none}
-    .topbar{background:#0a0a14;border-bottom:0.5px solid #1e1e2e;padding:14px 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .topbar{background:#0a0a14;border-bottom:.5px solid #1e1e2e;padding:14px 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
     .topbar-title{font-size:15px;font-weight:800;color:#f0f0f0}
     .topbar-title span{color:#6b21a8}
     .topbar-right{display:flex;align-items:center;gap:10px}
-    .logout-btn{background:transparent;border:0.5px solid #2a2a3a;border-radius:6px;padding:6px 14px;color:#666;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+    .golive-btn{background:#6b21a8;border:none;border-radius:6px;padding:7px 16px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .golive-btn:hover{background:#7c3aed}
+    .logout-btn{background:transparent;border:.5px solid #2a2a3a;border-radius:6px;padding:6px 14px;color:#666;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .2s,border-color .2s}
     .logout-btn:hover{color:#f0f0f0;border-color:#555}
     .admin-body{max-width:680px;margin:0 auto;padding:2.5rem 1.5rem;display:flex;flex-direction:column;gap:2rem}
-    .section{background:#0e0e1a;border:0.5px solid #1e1e2e;border-radius:10px;padding:1.5rem}
-    .section-title{font-size:11px;letter-spacing:0.2em;color:#6b21a8;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:0.7rem;border-bottom:0.5px solid #1e1e2e;display:flex;align-items:center;justify-content:space-between}
+    .section{background:#0e0e1a;border:.5px solid #1e1e2e;border-radius:10px;padding:1.5rem}
+    .section-title{font-size:11px;letter-spacing:.2em;color:#6b21a8;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:.5px solid #1e1e2e;display:flex;align-items:center;justify-content:space-between}
     .toggle-wrap{display:flex;align-items:center;gap:8px}
-    .toggle-label{font-size:11px;color:#555;letter-spacing:0.1em;text-transform:uppercase}
+    .toggle-label{font-size:11px;color:#555;letter-spacing:.1em;text-transform:uppercase}
     .toggle{position:relative;width:36px;height:20px}
     .toggle input{opacity:0;width:0;height:0}
-    .toggle-slider{position:absolute;inset:0;background:#1e1e2e;border-radius:20px;cursor:pointer;transition:background 0.2s}
-    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#444;border-radius:50%;transition:transform 0.2s,background 0.2s}
+    .toggle-slider{position:absolute;inset:0;background:#1e1e2e;border-radius:20px;cursor:pointer;transition:background .2s}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#444;border-radius:50%;transition:transform .2s,background .2s}
     .toggle input:checked+.toggle-slider{background:#6b21a8}
     .toggle input:checked+.toggle-slider::before{transform:translateX(16px);background:#fff}
     .field{margin-bottom:1.1rem}
     .field:last-child{margin-bottom:0}
-    .field label{font-size:11px;letter-spacing:0.12em;color:#555;text-transform:uppercase;display:block;margin-bottom:6px}
-    .field input,.field textarea,.field select{width:100%;background:#080810;border:0.5px solid #2a2a3a;border-radius:6px;padding:10px 12px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color 0.2s;font-family:inherit}
+    .field label{font-size:11px;letter-spacing:.12em;color:#555;text-transform:uppercase;display:block;margin-bottom:6px}
+    .field input,.field textarea,.field select{width:100%;background:#080810;border:.5px solid #2a2a3a;border-radius:6px;padding:10px 12px;color:#f0f0f0;font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#6b21a8}
     .field textarea{resize:vertical;min-height:80px;line-height:1.5}
     .field select option{background:#0e0e1a}
     .field .hint{font-size:11px;color:#333;margin-top:5px}
     .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .field input[type="color"]{height:40px;padding:4px 8px;cursor:pointer}
-
-    /* banner preview */
     .banner-preview{border-radius:6px;padding:10px 14px;font-size:13px;font-weight:600;margin-top:12px;display:none}
     .banner-preview.style-purple{background:#6b21a8;color:#fff}
-    .banner-preview.style-dark{background:#1a1a2a;color:#f0f0f0;border:0.5px solid #2a2a3a}
+    .banner-preview.style-dark{background:#1a1a2a;color:#f0f0f0;border:.5px solid #2a2a3a}
     .banner-preview.style-white{background:#f0f0f0;color:#080810}
-    .preview-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.6;margin-bottom:4px;display:block}
-
-    /* list rows */
-    #clues-list,#phases-list,#milestones-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+    .preview-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;opacity:.6;margin-bottom:4px;display:block}
+    #clues-list,#phases-list,#milestones-list,#clips-list,#gallery-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
     .list-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .list-row input{flex:1;min-width:80px}
     .list-row input.short{flex:0 0 80px}
     .list-row input.icon{flex:0 0 50px;text-align:center}
-    .del-btn{background:transparent;border:0.5px solid #2a2a3a;border-radius:4px;color:#555;font-size:13px;padding:6px 10px;cursor:pointer;transition:color 0.2s,border-color 0.2s;flex-shrink:0}
+    .del-btn{background:transparent;border:.5px solid #2a2a3a;border-radius:4px;color:#555;font-size:13px;padding:6px 10px;cursor:pointer;transition:color .2s,border-color .2s;flex-shrink:0}
     .del-btn:hover{color:#e24b4b;border-color:#e24b4b}
-    .add-btn{background:transparent;border:0.5px solid #2a2a3a;border-radius:6px;padding:8px 16px;color:#666;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-color 0.2s;width:100%}
+    .add-btn{background:transparent;border:.5px solid #2a2a3a;border-radius:6px;padding:8px 16px;color:#666;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .2s,border-color .2s;width:100%}
     .add-btn:hover{color:#f0f0f0;border-color:#6b21a8}
-
-    /* password change */
     .pw-row{display:flex;gap:8px}
     .pw-row input{flex:1}
-    .pw-change-btn{background:transparent;border:0.5px solid #2a2a3a;border-radius:6px;padding:10px 16px;color:#666;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-color 0.2s;white-space:nowrap}
+    .pw-change-btn{background:transparent;border:.5px solid #2a2a3a;border-radius:6px;padding:10px 16px;color:#666;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .2s,border-color .2s;white-space:nowrap}
     .pw-change-btn:hover{color:#f0f0f0;border-color:#6b21a8}
-
-    .preview-link{display:inline-block;font-size:11px;color:#444;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;margin-top:0.5rem;transition:color 0.2s}
+    .save-btn{width:100%;padding:13px;background:#6b21a8;border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .save-btn:hover{background:#7c3aed}
+    .save-btn:disabled{background:#3a1a5a;cursor:not-allowed;opacity:.6}
+    .preview-link{display:inline-block;font-size:11px;color:#444;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;margin-top:.5rem;transition:color .2s}
     .preview-link:hover{color:#6b21a8}
-    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a2e;border:0.5px solid #6b21a8;border-radius:6px;padding:10px 20px;font-size:12px;color:#a855f7;letter-spacing:0.1em;text-transform:uppercase;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a2e;border:.5px solid #6b21a8;border-radius:6px;padding:10px 20px;font-size:12px;color:#a855f7;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
     .toast.show{opacity:1}
-    @media(max-width:500px){.field-row{grid-template-columns:1fr}}
+    .toast.error{border-color:#e24b4b;color:#e24b4b;background:#1a0a0a}
+    .loading-overlay{position:fixed;inset:0;background:rgba(8,8,16,.8);z-index:998;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b21a8;letter-spacing:.2em;text-transform:uppercase}
+    @media(max-width:500px){.field-row{grid-template-columns:1fr}.topbar{flex-wrap:wrap;gap:8px}}
   </style>
 </head>
 <body>
 
-<div id="login-screen">
+<div id="loading-overlay" class="loading-overlay">Loading settings...</div>
+
+<div id="login-screen" style="display:none">
   <div class="login-box">
     <div class="login-title">DARK<span>ARROW</span> — Admin</div>
     <div><label>Username</label><input type="text" id="u" placeholder="username" autocomplete="off"/></div>
@@ -102,60 +102,56 @@
 
   <div class="admin-body">
 
-    <!-- ANNOUNCEMENT -->
     <div class="section">
       <div class="section-title">Announcement Banner
-        <div class="toggle-wrap"><span class="toggle-label" id="banner-tl">Off</span><label class="toggle"><input type="checkbox" id="f-banner-enabled" onchange="updateBannerPreview()"/><span class="toggle-slider"></span></label></div>
+        <div class="toggle-wrap"><span class="toggle-label" id="banner-tl">Off</span><label class="toggle"><input type="checkbox" id="f-banner-enabled" onchange="tl('banner-tl','f-banner-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
       <div class="field"><label>Message</label><input type="text" id="f-banner-text" placeholder="New stream announcement..." oninput="updateBannerPreview()"/></div>
       <div class="field-row">
         <div class="field"><label>Link Label</label><input type="text" id="f-banner-linklabel" placeholder="Watch Now" oninput="updateBannerPreview()"/></div>
         <div class="field"><label>Link URL</label><input type="text" id="f-banner-linkurl" placeholder="https://twitch.tv/..."/></div>
       </div>
-      <div class="field"><label>Style</label><select id="f-banner-style" onchange="updateBannerPreview()"><option value="purple">Purple</option><option value="dark">Dark</option><option value="white">White</option></select></div>
+      <div class="field"><label>Style</label>
+        <select id="f-banner-style" onchange="updateBannerPreview()">
+          <option value="purple">Purple</option><option value="dark">Dark</option><option value="white">White</option>
+        </select>
+      </div>
       <div class="banner-preview" id="banner-preview"><span class="preview-label">Preview</span><span id="preview-text"></span><span id="preview-link" style="margin-left:8px;font-weight:700;display:none"></span></div>
     </div>
 
-    <!-- SCHEDULED ANNOUNCEMENT -->
     <div class="section">
       <div class="section-title">Scheduled Announcement
         <div class="toggle-wrap"><span class="toggle-label" id="sched-tl">Off</span><label class="toggle"><input type="checkbox" id="f-sched-enabled" onchange="tl('sched-tl','f-sched-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
-      <div class="field"><label>Show Banner At</label><input type="datetime-local" id="f-sched-date"/><div class="hint">Banner will automatically appear at this date/time (your local time).</div></div>
+      <div class="field"><label>Show Banner At</label><input type="datetime-local" id="f-sched-date"/></div>
       <div class="field"><label>Scheduled Message</label><input type="text" id="f-sched-text" placeholder="The drop is almost here..."/></div>
     </div>
 
-    <!-- COUNTDOWN -->
     <div class="section">
       <div class="section-title">Countdown Target</div>
       <div class="field"><label>End Date &amp; Time</label><input type="datetime-local" id="f-date"/></div>
       <div class="field"><label>Timezone Offset</label><input type="text" id="f-tz" placeholder="-05:00"/><div class="hint">EST = -05:00 &nbsp;|&nbsp; EDT = -04:00 &nbsp;|&nbsp; UTC = +00:00</div></div>
     </div>
 
-    <!-- PHASES -->
     <div class="section">
       <div class="section-title">Phases</div>
       <div class="field"><label>Current Phase (0 = first)</label><input type="number" id="f-current-phase" placeholder="0" min="0"/></div>
       <div id="phases-list"></div>
-      <button class="add-btn" onclick="addPhase()">+ Add Phase</button>
-      <div class="hint" style="margin-top:8px">Each phase shows a badge label on the live page.</div>
+      <button class="add-btn" onclick="addPhaseRow({label:''})">+ Add Phase</button>
     </div>
 
-    <!-- PAGE TEXT & META -->
     <div class="section">
       <div class="section-title">Page Text &amp; Embed Info</div>
-      <div class="field"><label>Browser Tab Title</label><input type="text" id="f-title" placeholder="Darkarrow — something is coming"/><div class="hint">Shows in the browser tab and Discord/Twitter embeds.</div></div>
-      <div class="field"><label>Embed Description</label><input type="text" id="f-og-desc" placeholder="not_darkarrow has something big dropping..."/><div class="hint">Shows in Discord link previews and Twitter cards.</div></div>
+      <div class="field"><label>Browser Tab Title</label><input type="text" id="f-title" placeholder="darkarrow.lol — something is coming"/></div>
+      <div class="field"><label>Embed Description</label><input type="text" id="f-og-desc" placeholder="not_darkarrow has something big dropping..."/></div>
       <div class="field"><label>Eyebrow Text</label><input type="text" id="f-eyebrow" placeholder="classified /// eyes only"/></div>
       <div class="field"><label>Tagline</label><input type="text" id="f-tagline" placeholder="Friday · April 24 · 5:30 PM EST"/></div>
       <div class="field"><label>Twitch Username</label><input type="text" id="f-twitch" placeholder="not_darkarrow"/></div>
     </div>
 
-    <!-- ACCENT COLOR -->
     <div class="section">
       <div class="section-title">Accent Color</div>
-      <div class="field">
-        <label>Pick Color</label>
+      <div class="field"><label>Pick Color</label>
         <div style="display:flex;align-items:center;gap:12px">
           <input type="color" id="f-accent" value="#6b21a8" style="width:80px"/>
           <span style="font-size:12px;color:#555">Changes all purple accents site-wide</span>
@@ -163,32 +159,27 @@
       </div>
     </div>
 
-    <!-- CLUE DROPS -->
     <div class="section">
       <div class="section-title">Clue Drops
         <div class="toggle-wrap"><span class="toggle-label" id="clues-tl">Off</span><label class="toggle"><input type="checkbox" id="f-clues-enabled" onchange="tl('clues-tl','f-clues-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
       <div id="clues-list"></div>
-      <button class="add-btn" onclick="addClue()">+ Add Clue</button>
+      <button class="add-btn" onclick="addClueRow('')">+ Add Clue</button>
     </div>
 
-    <!-- HYPE METER -->
     <div class="section">
       <div class="section-title">Hype Meter
         <div class="toggle-wrap"><span class="toggle-label" id="hype-tl">Off</span><label class="toggle"><input type="checkbox" id="f-hype-enabled" onchange="tl('hype-tl','f-hype-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
-      <div class="field"><label>Goal (visits)</label><input type="number" id="f-hype-goal" placeholder="1000"/><div class="hint">Tracks how many people have visited the page.</div></div>
+      <div class="field"><label>Goal (visits)</label><input type="number" id="f-hype-goal" placeholder="1000"/></div>
     </div>
 
-    <!-- REACTIONS -->
     <div class="section">
       <div class="section-title">🔥 Reaction Button
         <div class="toggle-wrap"><span class="toggle-label" id="reaction-tl">Off</span><label class="toggle"><input type="checkbox" id="f-reaction-enabled" onchange="tl('reaction-tl','f-reaction-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
-      <div class="hint">Shows a fire button visitors can click. Count is stored locally.</div>
     </div>
 
-    <!-- FOLLOWER GOAL -->
     <div class="section">
       <div class="section-title">Follower Goal Bar
         <div class="toggle-wrap"><span class="toggle-label" id="follower-tl">Off</span><label class="toggle"><input type="checkbox" id="f-follower-enabled" onchange="tl('follower-tl','f-follower-enabled')"/><span class="toggle-slider"></span></label></div>
@@ -200,17 +191,14 @@
       </div>
     </div>
 
-    <!-- MILESTONES -->
     <div class="section">
       <div class="section-title">Milestone Badges
         <div class="toggle-wrap"><span class="toggle-label" id="milestones-tl">Off</span><label class="toggle"><input type="checkbox" id="f-milestones-enabled" onchange="tl('milestones-tl','f-milestones-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
       <div id="milestones-list"></div>
-      <button class="add-btn" onclick="addMilestone()">+ Add Milestone</button>
-      <div class="hint" style="margin-top:8px">Badges unlock when follower count reaches the threshold.</div>
+      <button class="add-btn" onclick="addMilestoneRow({icon:'⭐',label:'',threshold:0})">+ Add Milestone</button>
     </div>
 
-    <!-- DISCORD -->
     <div class="section">
       <div class="section-title">Discord Button
         <div class="toggle-wrap"><span class="toggle-label" id="discord-tl">Off</span><label class="toggle"><input type="checkbox" id="f-discord-enabled" onchange="tl('discord-tl','f-discord-enabled')"/><span class="toggle-slider"></span></label></div>
@@ -218,27 +206,44 @@
       <div class="field"><label>Discord Invite URL</label><input type="text" id="f-discord-url" placeholder="https://discord.gg/..."/></div>
     </div>
 
-    <!-- SECRET EASTER EGG -->
     <div class="section">
       <div class="section-title">Secret Easter Egg
         <div class="toggle-wrap"><span class="toggle-label" id="secret-tl">Off</span><label class="toggle"><input type="checkbox" id="f-secret-enabled" onchange="tl('secret-tl','f-secret-enabled')"/><span class="toggle-slider"></span></label></div>
       </div>
-      <div class="field"><label>Secret Message</label><input type="text" id="f-secret-msg" placeholder="You found it. Stay tuned..."/><div class="hint">Appears when logo is clicked a specific number of times.</div></div>
-      <div class="field"><label>Clicks Required</label><input type="number" id="f-secret-clicks" placeholder="7" min="3" max="20"/></div>
+      <div class="field"><label>Clicks Required to Trigger</label><input type="number" id="f-secret-clicks" placeholder="7" min="3" max="20"/><div class="hint">Click the logo this many times to open Snake.</div></div>
     </div>
 
-    <!-- WHEN TIMER ENDS -->
     <div class="section">
       <div class="section-title">When Timer Ends</div>
       <div class="field"><label>Big Message</label><input type="text" id="f-ended" placeholder="It's time."/></div>
-      <div class="field"><label>Reveal Text</label><textarea id="f-revealtext" placeholder="Write anything you want shown after the countdown ends..."></textarea></div>
+      <div class="field"><label>Reveal Text</label><textarea id="f-revealtext" placeholder="Write anything shown after the countdown ends..."></textarea></div>
       <div class="field-row">
         <div class="field"><label>Button Label</label><input type="text" id="f-linklabel" placeholder="Watch Now"/></div>
         <div class="field"><label>Button URL</label><input type="text" id="f-linkurl" placeholder="https://twitch.tv/not_darkarrow"/></div>
       </div>
     </div>
 
-    <!-- CHANGE PASSWORD -->
+    <div class="section">
+      <div class="section-title">Reveal Site — darkarrow.lol</div>
+      <div class="field"><label>Hero Subtext</label><input type="text" id="f-hero-sub" placeholder="Twitch streamer. Minecraft server builder..."/></div>
+      <div class="field"><label>Bio Text</label><textarea id="f-bio" placeholder="Your bio..."></textarea></div>
+      <div class="field"><label>Merch Section Text</label><input type="text" id="f-merch-text" placeholder="Merch might be coming soon..."/></div>
+      <div class="field"><label>Minecraft Server IP</label><input type="text" id="f-server-ip" placeholder="play.yourserver.net"/></div>
+      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Socials</div>
+      <div class="field"><label>Twitch URL</label><input type="text" id="f-social-twitch" placeholder="https://twitch.tv/not_darkarrow"/></div>
+      <div class="field"><label>Twitter / X URL</label><input type="text" id="f-social-twitter" placeholder="https://twitter.com/..."/></div>
+      <div class="field"><label>Discord URL</label><input type="text" id="f-social-discord" placeholder="https://discord.gg/..."/></div>
+      <div class="field"><label>YouTube URL</label><input type="text" id="f-social-youtube" placeholder="https://youtube.com/..."/></div>
+      <div class="field"><label>TikTok URL</label><input type="text" id="f-social-tiktok" placeholder="https://tiktok.com/@..."/></div>
+      <div class="field"><label>Instagram URL</label><input type="text" id="f-social-instagram" placeholder="https://instagram.com/..."/></div>
+      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Clips</div>
+      <div id="clips-list"></div>
+      <button class="add-btn" onclick="addClipRow({url:'',title:''})">+ Add Clip</button>
+      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Gallery (Image URLs)</div>
+      <div id="gallery-list"></div>
+      <button class="add-btn" onclick="addGalleryRow('')">+ Add Image URL</button>
+    </div>
+
     <div class="section">
       <div class="section-title">Change Password</div>
       <div class="field"><label>New Password</label>
@@ -249,40 +254,20 @@
       </div>
     </div>
 
-    <!-- REVEAL SITE -->
-    <div class="section">
-      <div class="section-title">Reveal Site — not_darkarrow</div>
-      <div class="field"><label>Hero Subtext</label><input type="text" id="f-hero-sub" placeholder="Twitch streamer. Minecraft server builder..."/>< /div>
-      <div class="field"><label>Bio Text</label><textarea id="f-bio" placeholder="Your bio here..."></textarea></div>
-      <div class="field"><label>Merch Section Text</label><input type="text" id="f-merch-text" placeholder="Merch might be coming soon..."/>< /div>
-      <div class="field"><label>Minecraft Server IP</label><input type="text" id="f-server-ip" placeholder="play.yourserver.net"/>< /div>
-      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Socials</div>
-      <div class="field"><label>Twitch URL</label><input type="text" id="f-social-twitch" placeholder="https://twitch.tv/not_darkarrow"/>< /div>
-      <div class="field"><label>Twitter / X URL</label><input type="text" id="f-social-twitter" placeholder="https://twitter.com/..."/>< /div>
-      <div class="field"><label>Discord URL</label><input type="text" id="f-social-discord" placeholder="https://discord.gg/..."/>< /div>
-      <div class="field"><label>YouTube URL</label><input type="text" id="f-social-youtube" placeholder="https://youtube.com/..."/>< /div>
-      <div class="field"><label>TikTok URL</label><input type="text" id="f-social-tiktok" placeholder="https://tiktok.com/@..."/>< /div>
-      <div class="field"><label>Instagram URL</label><input type="text" id="f-social-instagram" placeholder="https://instagram.com/..."/>< /div>
-      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Clips (YouTube or Twitch URLs)</div>
-      <div id="clips-list"></div>
-      <button class="add-btn" onclick="addClipRow()">+ Add Clip</button>
-      <div class="section-title" style="margin-top:1.5rem;padding-top:1rem;border-top:.5px solid #1e1e2e;border-bottom:none;margin-bottom:.8rem">Gallery (Image URLs)</div>
-      <div id="gallery-list"></div>
-      <button class="add-btn" onclick="addGalleryRow()">+ Add Image URL</button>
-    </div>
-
-    <button class="save-btn" onclick="saveSettings()">Save &amp; Apply Changes</button>
+    <button class="save-btn" id="save-btn" onclick="doSave()">Save &amp; Apply Changes</button>
     <a href="/" class="preview-link">← View live site</a>
   </div>
 </div>
 
-<div class="toast" id="toast">Saved!</div>
+<div class="toast" id="toast"></div>
 
 <script src="../settings.js"></script>
 <script>
-  // ── AUTH (supports custom password) ──
-  const DEFAULT_CREDS={username:'xander',password:'xander'};
+  const DEFAULT_CREDS = {username:'xander',password:'xander'};
+  let _settings = {};
+
   function getCreds(){try{return JSON.parse(localStorage.getItem('df_creds'))||DEFAULT_CREDS;}catch{return DEFAULT_CREDS;}}
+
   function doLogin(){
     const u=document.getElementById('u').value.trim();
     const p=document.getElementById('p').value;
@@ -290,158 +275,165 @@
     if(u===c.username&&p===c.password){sessionStorage.setItem('df_auth','1');showAdmin();}
     else{document.getElementById('login-error').style.display='block';}
   }
+  document.addEventListener('DOMContentLoaded',()=>{
+    const pu=document.getElementById('p');
+    const uu=document.getElementById('u');
+    if(pu)pu.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+    if(uu)uu.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  });
+
   function changePassword(){
     const np=document.getElementById('f-new-pw').value;
-    if(!np||np.length<4){showToast('Too short!');return;}
+    if(!np||np.length<4){showToast('Too short!',true);return;}
     const c=getCreds();c.password=np;
     localStorage.setItem('df_creds',JSON.stringify(c));
-    document.getElementById('f-new-pw').value='';showToast('Password updated!');
+    document.getElementById('f-new-pw').value='';
+    showToast('Password updated!');
   }
-  document.getElementById('p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  document.getElementById('u').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  function doLogout(){sessionStorage.removeItem('df_auth');document.getElementById('admin-screen').style.display='none';document.getElementById('login-screen').style.display='flex';}
-  function showAdmin(){document.getElementById('login-screen').style.display='none';document.getElementById('admin-screen').style.display='block';loadSettings().then(s=>{_cachedSettings=s;loadFields();});}
 
-  const DEFAULTS={
-    targetDate:'2026-04-24T17:30:00',targetTZ:'-05:00',
-    tagline:'Friday · April 24 · 5:30 PM EST',eyebrow:'classified /// eyes only',
-    twitchName:'not_darkarrow',endedMessage:"It's time.",
-    revealText:'',revealLinkLabel:'',revealLinkURL:'',
-    announcementText:'',announcementLinkLabel:'',announcementLinkURL:'',
-    announcementStyle:'purple',announcementEnabled:false,
-    schedEnabled:false,schedDate:'',schedText:'',
-    discordURL:'',discordEnabled:false,
-    clues:[],cluesEnabled:false,
-    followerCurrent:0,followerGoal:0,followerLabel:'Follower Goal',followerEnabled:false,
-    accentColor:'#6b21a8',
-    hypeGoal:1000,hypeEnabled:false,
-    reactionEnabled:false,
-    milestonesEnabled:false,milestones:[],
-    secretEnabled:false,secretMessage:'You found it. Stay tuned...',secretClicks:7,
-    phases:[],currentPhase:0,
-    pageTitle:'Darkarrow — something is coming',
-    ogDescription:'not_darkarrow has something big dropping. The countdown is live.',
-  };
-  // Settings loaded via settings.js (window.DF)
+  function doLogout(){
+    sessionStorage.removeItem('df_auth');
+    document.getElementById('admin-screen').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+  }
+
+  async function showAdmin(){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    document.getElementById('loading-overlay').style.display='flex';
+    _settings = await loadSettings();
+    document.getElementById('loading-overlay').style.display='none';
+    loadFields();
+  }
+
+  // ── HELPERS ──
+  function v(k,def){return _settings[k]!==undefined?_settings[k]:def;}
   function tl(labelId,checkId){document.getElementById(labelId).textContent=document.getElementById(checkId).checked?'On':'Off';}
+  function esc(s){return String(s||'').replace(/"/g,'&quot;');}
 
-  async function loadFields(){
-    const st=await window.DF.getSettings();
-    function v(k){return st[k]!==undefined?st[k]:DEFAULTS[k];}
-    document.getElementById('f-date').value=v('targetDate');
-    document.getElementById('f-tz').value=v('targetTZ');
-    document.getElementById('f-tagline').value=v('tagline');
-    document.getElementById('f-eyebrow').value=v('eyebrow');
-    document.getElementById('f-twitch').value=v('twitchName');
-    document.getElementById('f-ended').value=v('endedMessage');
-    document.getElementById('f-revealtext').value=v('revealText');
-    document.getElementById('f-linklabel').value=v('revealLinkLabel');
-    document.getElementById('f-linkurl').value=v('revealLinkURL');
-    document.getElementById('f-banner-text').value=v('announcementText');
-    document.getElementById('f-banner-linklabel').value=v('announcementLinkLabel');
-    document.getElementById('f-banner-linkurl').value=v('announcementLinkURL');
-    document.getElementById('f-banner-style').value=v('announcementStyle');
-    document.getElementById('f-banner-enabled').checked=v('announcementEnabled');
-    document.getElementById('f-sched-enabled').checked=v('schedEnabled');
-    document.getElementById('f-sched-date').value=v('schedDate');
-    document.getElementById('f-sched-text').value=v('schedText');
-    document.getElementById('f-discord-url').value=v('discordURL');
-    document.getElementById('f-discord-enabled').checked=v('discordEnabled');
-    document.getElementById('f-follower-label').value=v('followerLabel');
-    document.getElementById('f-follower-current').value=v('followerCurrent');
-    document.getElementById('f-follower-goal').value=v('followerGoal');
-    document.getElementById('f-follower-enabled').checked=v('followerEnabled');
-    document.getElementById('f-clues-enabled').checked=v('cluesEnabled');
-    document.getElementById('f-accent').value=v('accentColor');
-    document.getElementById('f-hype-goal').value=v('hypeGoal');
-    document.getElementById('f-hype-enabled').checked=v('hypeEnabled');
-    document.getElementById('f-reaction-enabled').checked=v('reactionEnabled');
-    document.getElementById('f-milestones-enabled').checked=v('milestonesEnabled');
-    document.getElementById('f-secret-enabled').checked=v('secretEnabled');
-    document.getElementById('f-secret-msg').value=v('secretMessage');
-    document.getElementById('f-secret-clicks').value=v('secretClicks');
-    document.getElementById('f-current-phase').value=v('currentPhase');
-    document.getElementById('f-title').value=v('pageTitle');
-    document.getElementById('f-og-desc').value=v('ogDescription');
-    loadClues(v('clues'));loadPhases(v('phases'));loadMilestones(v('milestones'));
+  // ── LOAD FIELDS ──
+  function loadFields(){
+    document.getElementById('f-date').value=v('targetDate','2026-04-24T17:30:00');
+    document.getElementById('f-tz').value=v('targetTZ','-05:00');
+    document.getElementById('f-tagline').value=v('tagline','Friday · April 24 · 5:30 PM EST');
+    document.getElementById('f-eyebrow').value=v('eyebrow','classified /// eyes only');
+    document.getElementById('f-twitch').value=v('twitchName','not_darkarrow');
+    document.getElementById('f-ended').value=v('endedMessage',"It's time.");
+    document.getElementById('f-revealtext').value=v('revealText','');
+    document.getElementById('f-linklabel').value=v('revealLinkLabel','');
+    document.getElementById('f-linkurl').value=v('revealLinkURL','');
+    document.getElementById('f-banner-text').value=v('announcementText','');
+    document.getElementById('f-banner-linklabel').value=v('announcementLinkLabel','');
+    document.getElementById('f-banner-linkurl').value=v('announcementLinkURL','');
+    document.getElementById('f-banner-style').value=v('announcementStyle','purple');
+    document.getElementById('f-banner-enabled').checked=v('announcementEnabled',false);
+    document.getElementById('f-sched-enabled').checked=v('schedEnabled',false);
+    document.getElementById('f-sched-date').value=v('schedDate','');
+    document.getElementById('f-sched-text').value=v('schedText','');
+    document.getElementById('f-discord-url').value=v('discordURL','');
+    document.getElementById('f-discord-enabled').checked=v('discordEnabled',false);
+    document.getElementById('f-follower-label').value=v('followerLabel','Follower Goal');
+    document.getElementById('f-follower-current').value=v('followerCurrent',0);
+    document.getElementById('f-follower-goal').value=v('followerGoal',0);
+    document.getElementById('f-follower-enabled').checked=v('followerEnabled',false);
+    document.getElementById('f-clues-enabled').checked=v('cluesEnabled',false);
+    document.getElementById('f-accent').value=v('accentColor','#6b21a8');
+    document.getElementById('f-hype-goal').value=v('hypeGoal',1000);
+    document.getElementById('f-hype-enabled').checked=v('hypeEnabled',false);
+    document.getElementById('f-reaction-enabled').checked=v('reactionEnabled',false);
+    document.getElementById('f-milestones-enabled').checked=v('milestonesEnabled',false);
+    document.getElementById('f-secret-enabled').checked=v('secretEnabled',false);
+    document.getElementById('f-secret-clicks').value=v('secretClicks',7);
+    document.getElementById('f-current-phase').value=v('currentPhase',0);
+    document.getElementById('f-title').value=v('pageTitle','darkarrow.lol — something is coming');
+    document.getElementById('f-og-desc').value=v('ogDescription','not_darkarrow — Twitch streamer & Minecraft server creator.');
+    document.getElementById('f-hero-sub').value=v('heroSubtext','');
+    document.getElementById('f-bio').value=v('bioText','');
+    document.getElementById('f-merch-text').value=v('merchText','');
+    document.getElementById('f-server-ip').value=v('serverIP','');
+    document.getElementById('f-social-twitch').value=v('social_twitch','https://twitch.tv/not_darkarrow');
+    document.getElementById('f-social-twitter').value=v('social_twitter','');
+    document.getElementById('f-social-discord').value=v('social_discord','');
+    document.getElementById('f-social-youtube').value=v('social_youtube','');
+    document.getElementById('f-social-tiktok').value=v('social_tiktok','');
+    document.getElementById('f-social-instagram').value=v('social_instagram','');
+    loadClues(v('clues',[]));
+    loadPhases(v('phases',[]));
+    loadMilestones(v('milestones',[]));
+    loadClips(v('revealClips',[]));
+    loadGallery(v('galleryImages',[]));
     ['banner-tl','sched-tl','clues-tl','hype-tl','reaction-tl','follower-tl','milestones-tl','discord-tl','secret-tl'].forEach(id=>{
-      const checkId='f-'+id.replace('-tl','').replace('sched','sched')+'-enabled';
+      const checkId='f-'+id.replace('-tl','')+'-enabled';
       const el=document.getElementById(checkId);
       if(el)document.getElementById(id).textContent=el.checked?'On':'Off';
     });
     updateBannerPreview();
   }
 
-  // Clues
+  // ── LIST BUILDERS ──
   function loadClues(arr){const l=document.getElementById('clues-list');l.innerHTML='';(arr||[]).forEach(c=>addClueRow(c));}
-  function addClue(){addClueRow('');}
   function addClueRow(val){
     const l=document.getElementById('clues-list');const r=document.createElement('div');r.className='list-row';
     r.innerHTML=`<input type="text" placeholder="Enter a mysterious clue..." value="${esc(val)}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;l.appendChild(r);
   }
   function getClues(){return[...document.querySelectorAll('#clues-list .list-row input')].map(i=>i.value).filter(v=>v.trim());}
 
-  // Phases
   function loadPhases(arr){const l=document.getElementById('phases-list');l.innerHTML='';(arr||[]).forEach(p=>addPhaseRow(p));}
-  function addPhase(){addPhaseRow({label:''});}
   function addPhaseRow(p){
     const l=document.getElementById('phases-list');const r=document.createElement('div');r.className='list-row';
     r.innerHTML=`<input type="text" placeholder="e.g. Phase 1 — The Signal" value="${esc(p.label||'')}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;l.appendChild(r);
   }
   function getPhases(){return[...document.querySelectorAll('#phases-list .list-row input')].map(i=>({label:i.value})).filter(p=>p.label.trim());}
 
-  // Milestones
   function loadMilestones(arr){const l=document.getElementById('milestones-list');l.innerHTML='';(arr||[]).forEach(m=>addMilestoneRow(m));}
-  function addMilestone(){addMilestoneRow({icon:'⭐',label:'',threshold:0});}
   function addMilestoneRow(m){
     const l=document.getElementById('milestones-list');const r=document.createElement('div');r.className='list-row';
     r.innerHTML=`<input type="text" class="icon" placeholder="⭐" value="${esc(m.icon||'⭐')}"/><input type="text" placeholder="500 Followers" value="${esc(m.label||'')}"/><input type="number" class="short" placeholder="500" value="${m.threshold||0}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;l.appendChild(r);
   }
-  function getMilestones(){
-    return[...document.querySelectorAll('#milestones-list .list-row')].map(r=>{
-      const ins=[...r.querySelectorAll('input')];
-      return{icon:ins[0]?.value||'⭐',label:ins[1]?.value||'',threshold:parseInt(ins[2]?.value)||0};
-    }).filter(m=>m.label.trim());
+  function getMilestones(){return[...document.querySelectorAll('#milestones-list .list-row')].map(r=>{const ins=[...r.querySelectorAll('input')];return{icon:ins[0]?.value||'⭐',label:ins[1]?.value||'',threshold:parseInt(ins[2]?.value)||0};}).filter(m=>m.label.trim());}
+
+  function loadClips(arr){const l=document.getElementById('clips-list');l.innerHTML='';(arr||[]).forEach(c=>addClipRow(c));}
+  function addClipRow(c){
+    c=c||{url:'',title:''};const l=document.getElementById('clips-list');const r=document.createElement('div');r.className='list-row';
+    r.innerHTML=`<input type="text" placeholder="YouTube or Twitch clip URL" value="${esc(c.url||'')}"/><input type="text" placeholder="Title" value="${esc(c.title||'')}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;l.appendChild(r);
   }
+  function getClips(){return[...document.querySelectorAll('#clips-list .list-row')].map(r=>{const ins=[...r.querySelectorAll('input')];return{url:ins[0]?.value||'',title:ins[1]?.value||''};}).filter(c=>c.url.trim());}
 
-  function esc(s){return String(s).replace(/"/g,'&quot;');}
+  function loadGallery(arr){const l=document.getElementById('gallery-list');l.innerHTML='';(arr||[]).forEach(u=>addGalleryRow(u));}
+  function addGalleryRow(u){
+    const l=document.getElementById('gallery-list');const r=document.createElement('div');r.className='list-row';
+    r.innerHTML=`<input type="text" placeholder="https://...image.jpg" value="${esc(u||'')}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;l.appendChild(r);
+  }
+  function getGallery(){return[...document.querySelectorAll('#gallery-list .list-row input')].map(i=>i.value).filter(v=>v.trim());}
 
+  // ── BANNER PREVIEW ──
   function updateBannerPreview(){
     const txt=document.getElementById('f-banner-text').value;
     const style=document.getElementById('f-banner-style').value;
     const ll=document.getElementById('f-banner-linklabel').value;
-    const enabled=document.getElementById('f-banner-enabled').checked;
-    document.getElementById('banner-tl').textContent=enabled?'On':'Off';
     const p=document.getElementById('banner-preview');
     if(txt){p.style.display='block';p.className='banner-preview style-'+style;document.getElementById('preview-text').textContent=txt;const pl=document.getElementById('preview-link');if(ll){pl.textContent=ll;pl.style.display='inline';}else pl.style.display='none';}
     else p.style.display='none';
   }
 
-  function goLive(){
+  // ── GO LIVE ──
+  async function goLive(){
     if(!confirm('This immediately ends the countdown on the live site. Continue?'))return;
-    window.DF.getSettings().then(st=>{
-      st.targetDate='2000-01-01T00:00:00';st.targetTZ='+00:00';
-      return window.DF.saveSettings(st);
-    }).then(()=>showToast('Gone live!')).catch(()=>showToast('Failed!'));
+    const st={..._settings,targetDate:'2000-01-01T00:00:00',targetTZ:'+00:00'};
+    try{
+      await saveSettings(st);
+      _settings=st;
+      showToast('Gone live!');
+    }catch(e){showToast('Failed to go live!',true);}
   }
 
-  function saveSettings(){
-    // Check scheduled announcement
-    const schedEnabled=document.getElementById('f-sched-enabled').checked;
-    const schedDate=document.getElementById('f-sched-date').value;
-    const schedText=document.getElementById('f-sched-text').value;
-    if(schedEnabled&&schedDate&&schedText){
-      const schedTs=new Date(schedDate).getTime();
-      if(Date.now()>=schedTs){
-        const st=getSettings();
-        st.announcementText=schedText;st.announcementEnabled=true;
-        window.DF.saveSettings(st).catch(()=>{});
-      }
-    }
-
+  // ── SAVE ──
+  async function doSave(){
+    const btn=document.getElementById('save-btn');
+    btn.disabled=true;btn.textContent='Saving...';
     const settings={
-      targetDate:document.getElementById('f-date').value||DEFAULTS.targetDate,
-      targetTZ:document.getElementById('f-tz').value||DEFAULTS.targetTZ,
+      targetDate:document.getElementById('f-date').value||'2026-04-24T17:30:00',
+      targetTZ:document.getElementById('f-tz').value||'-05:00',
       tagline:document.getElementById('f-tagline').value,
       eyebrow:document.getElementById('f-eyebrow').value,
       twitchName:document.getElementById('f-twitch').value,
@@ -454,7 +446,9 @@
       announcementLinkURL:document.getElementById('f-banner-linkurl').value,
       announcementStyle:document.getElementById('f-banner-style').value,
       announcementEnabled:document.getElementById('f-banner-enabled').checked,
-      schedEnabled,schedDate,schedText,
+      schedEnabled:document.getElementById('f-sched-enabled').checked,
+      schedDate:document.getElementById('f-sched-date').value,
+      schedText:document.getElementById('f-sched-text').value,
       discordURL:document.getElementById('f-discord-url').value,
       discordEnabled:document.getElementById('f-discord-enabled').checked,
       followerLabel:document.getElementById('f-follower-label').value,
@@ -468,76 +462,51 @@
       reactionEnabled:document.getElementById('f-reaction-enabled').checked,
       milestones:getMilestones(),milestonesEnabled:document.getElementById('f-milestones-enabled').checked,
       secretEnabled:document.getElementById('f-secret-enabled').checked,
-      secretMessage:document.getElementById('f-secret-msg').value,
       secretClicks:parseInt(document.getElementById('f-secret-clicks').value)||7,
       phases:getPhases(),currentPhase:parseInt(document.getElementById('f-current-phase').value)||0,
       pageTitle:document.getElementById('f-title').value,
       ogDescription:document.getElementById('f-og-desc').value,
+      heroSubtext:document.getElementById('f-hero-sub').value,
+      bioText:document.getElementById('f-bio').value,
+      merchText:document.getElementById('f-merch-text').value,
+      serverIP:document.getElementById('f-server-ip').value,
+      social_twitch:document.getElementById('f-social-twitch').value,
+      social_twitter:document.getElementById('f-social-twitter').value,
+      social_discord:document.getElementById('f-social-discord').value,
+      social_youtube:document.getElementById('f-social-youtube').value,
+      social_tiktok:document.getElementById('f-social-tiktok').value,
+      social_instagram:document.getElementById('f-social-instagram').value,
+      revealClips:getClips(),
+      galleryImages:getGallery(),
     };
-    window.DF.saveSettings(settings)
-      .then(()=>showToast('Saved!'))
-      .catch(()=>showToast('Save failed!'));
+    try{
+      await saveSettings(settings);
+      _settings=settings;
+      showToast('Saved!');
+    }catch(e){
+      showToast('Save failed — check connection',true);
+    }finally{
+      btn.disabled=false;btn.textContent='Save & Apply Changes';
+    }
   }
 
-  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
-  // ── REVEAL SITE FIELDS ──
-  function loadRevealFields(){
-    const st=getSettings();
-    function v(k,d){return st[k]!==undefined?st[k]:d;}
-    document.getElementById('f-hero-sub').value=v('heroSubtext','');
-    document.getElementById('f-bio').value=v('bioText','');
-    document.getElementById('f-merch-text').value=v('merchText','');
-    document.getElementById('f-server-ip').value=v('serverIP','');
-    document.getElementById('f-social-twitch').value=v('social_twitch','https://twitch.tv/not_darkarrow');
-    document.getElementById('f-social-twitter').value=v('social_twitter','');
-    document.getElementById('f-social-discord').value=v('social_discord','');
-    document.getElementById('f-social-youtube').value=v('social_youtube','');
-    document.getElementById('f-social-tiktok').value=v('social_tiktok','');
-    document.getElementById('f-social-instagram').value=v('social_instagram','');
-    const cl=document.getElementById('clips-list');cl.innerHTML='';
-    (v('revealClips',[])).forEach(c=>addClipRow(c));
-    const gl=document.getElementById('gallery-list');gl.innerHTML='';
-    (v('galleryImages',[])).forEach(u=>addGalleryRow(u));
+  // ── TOAST ──
+  function showToast(msg,isError=false){
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast'+(isError?' error':'');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2500);
   }
-  function addClipRow(c){
-    c=c||{url:'',title:''};
-    const l=document.getElementById('clips-list');
-    const r=document.createElement('div');r.className='list-row';
-    r.innerHTML=`<input type="text" placeholder="YouTube or Twitch clip URL" value="${esc(c.url||'')}"/><input type="text" placeholder="Title" value="${esc(c.title||'')}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
-    l.appendChild(r);
-  }
-  function addGalleryRow(u){
-    const l=document.getElementById('gallery-list');
-    const r=document.createElement('div');r.className='list-row';
-    r.innerHTML=`<input type="text" placeholder="https://...image.jpg" value="${esc(u||'')}"/><button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
-    l.appendChild(r);
-  }
-  function getClipsData(){return[...document.querySelectorAll('#clips-list .list-row')].map(r=>{const ins=[...r.querySelectorAll('input')];return{url:ins[0]?.value||'',title:ins[1]?.value||''};}).filter(c=>c.url.trim());}
-  function getGalleryData(){return[...document.querySelectorAll('#gallery-list .list-row input')].map(i=>i.value).filter(v=>v.trim());}
 
-  const _origLoad=loadFields;
-  loadFields=function(){_origLoad();loadRevealFields();};
-  const _origSave=saveSettings;
-  saveSettings=function(){
-    _origSave();
-    const st=getSettings();
-    st.heroSubtext=document.getElementById('f-hero-sub').value;
-    st.bioText=document.getElementById('f-bio').value;
-    st.merchText=document.getElementById('f-merch-text').value;
-    st.serverIP=document.getElementById('f-server-ip').value;
-    st.social_twitch=document.getElementById('f-social-twitch').value;
-    st.social_twitter=document.getElementById('f-social-twitter').value;
-    st.social_discord=document.getElementById('f-social-discord').value;
-    st.social_youtube=document.getElementById('f-social-youtube').value;
-    st.social_tiktok=document.getElementById('f-social-tiktok').value;
-    st.social_instagram=document.getElementById('f-social-instagram').value;
-    st.revealClips=getClipsData();
-    st.galleryImages=getGalleryData();
-    window.DF.saveSettings(st).catch(()=>{});
-  };
-
-  if(sessionStorage.getItem('df_auth')==='1')showAdmin();
+  // ── BOOT ──
+  async function boot(){
+    _settings = await loadSettings();
+    document.getElementById('loading-overlay').style.display='none';
+    if(sessionStorage.getItem('df_auth')==='1'){showAdmin();}
+    else{document.getElementById('login-screen').style.display='flex';}
+  }
+  boot();
 </script>
-<script src="../settings.js"></script>
 </body>
 </html>
