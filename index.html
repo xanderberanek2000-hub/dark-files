@@ -4,126 +4,155 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Files</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080810'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='20' font-weight='900' font-family='Arial' fill='%236b21a8'>D</text></svg>" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #080810;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      position: relative;
-      overflow-x: hidden;
-    }
-    .scanlines {
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
-      pointer-events: none; z-index: 1;
-    }
-    .corner { position: fixed; width: 22px; height: 22px; z-index: 2; }
-    .corner.tl { top: 24px; left: 24px; border-top: 1.5px solid #6b21a8; border-left: 1.5px solid #6b21a8; }
-    .corner.tr { top: 24px; right: 24px; border-top: 1.5px solid #6b21a8; border-right: 1.5px solid #6b21a8; }
-    .corner.bl { bottom: 24px; left: 24px; border-bottom: 1.5px solid #6b21a8; border-left: 1.5px solid #6b21a8; }
-    .corner.br { bottom: 24px; right: 24px; border-bottom: 1.5px solid #6b21a8; border-right: 1.5px solid #6b21a8; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;overflow-x:hidden}
+    body{background:#080810;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Segoe UI',system-ui,sans-serif;position:relative}
+
+    /* PARTICLES */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    /* SCANLINES */
+    .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:1}
+
+    /* CORNERS */
+    .corner{position:fixed;width:22px;height:22px;z-index:2}
+    .corner.tl{top:24px;left:24px;border-top:1.5px solid #6b21a8;border-left:1.5px solid #6b21a8}
+    .corner.tr{top:24px;right:24px;border-top:1.5px solid #6b21a8;border-right:1.5px solid #6b21a8}
+    .corner.bl{bottom:24px;left:24px;border-bottom:1.5px solid #6b21a8;border-left:1.5px solid #6b21a8}
+    .corner.br{bottom:24px;right:24px;border-bottom:1.5px solid #6b21a8;border-right:1.5px solid #6b21a8}
 
     /* ANNOUNCEMENT BANNER */
-    #announcement-banner {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 10px 48px 10px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-align: center;
-      line-height: 1.4;
-    }
-    #announcement-banner.style-red    { background: #6b21a8; color: #fff; }
-    #announcement-banner.style-dark   { background: #0e0e1a; color: #f0f0f0; border-bottom: 1px solid #2a2a3a; }
-    #announcement-banner.style-white  { background: #f0f0f0; color: #080810; }
-    #banner-close {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1;
-      opacity: 0.6; padding: 4px;
-    }
-    #announcement-banner.style-red   #banner-close { color: #fff; }
-    #announcement-banner.style-dark  #banner-close { color: #f0f0f0; }
-    #announcement-banner.style-white #banner-close { color: #080810; }
-    #banner-close:hover { opacity: 1; }
-    #banner-link { color: inherit; font-weight: 700; margin-left: 8px; opacity: 0.85; }
-    #banner-link:hover { opacity: 1; }
+    #announcement-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:100;padding:10px 48px 10px 20px;font-size:13px;font-weight:600;letter-spacing:0.04em;text-align:center;line-height:1.4}
+    #announcement-banner.style-purple{background:#6b21a8;color:#fff}
+    #announcement-banner.style-dark{background:#0e0e1a;color:#f0f0f0;border-bottom:1px solid #2a2a3a}
+    #announcement-banner.style-white{background:#f0f0f0;color:#080810}
+    #banner-close{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;line-height:1;opacity:0.6;padding:4px;color:inherit}
+    #banner-close:hover{opacity:1}
+    #banner-link{color:inherit;font-weight:700;margin-left:8px;opacity:0.85}
+    #banner-link:hover{opacity:1}
 
-    .content {
-      position: relative; z-index: 3;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 2rem 1.5rem;
+    /* CONTENT */
+    .content{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding:2rem 1.5rem;width:100%;max-width:700px}
+
+    .eyebrow{font-size:10px;letter-spacing:0.35em;color:#444;text-transform:uppercase;margin-bottom:1.4rem}
+
+    /* GLITCH LOGO */
+    .logo{font-size:clamp(42px,8vw,72px);font-weight:900;letter-spacing:-0.03em;line-height:1;margin-bottom:0.5rem;text-align:center;position:relative;cursor:default;user-select:none}
+    .logo-dark{color:#f0f0f0}
+    .logo-files{color:#6b21a8}
+    .logo.glitching .logo-dark{animation:glitch-text 0.3s steps(2) infinite}
+    .logo.glitching .logo-files{animation:glitch-text2 0.3s steps(2) infinite}
+    @keyframes glitch-text{
+      0%{text-shadow:2px 0 #7c3aed,-2px 0 #a855f7;clip-path:inset(10% 0 80% 0)}
+      25%{text-shadow:-2px 0 #7c3aed,2px 0 #a855f7;clip-path:inset(50% 0 30% 0)}
+      50%{text-shadow:2px 2px #7c3aed;clip-path:inset(70% 0 5% 0)}
+      75%{text-shadow:-1px 0 #a855f7;clip-path:inset(30% 0 60% 0)}
+      100%{text-shadow:none;clip-path:none}
     }
-    .eyebrow { font-size: 10px; letter-spacing: 0.35em; color: #444; text-transform: uppercase; margin-bottom: 1.4rem; }
-    .logo { font-size: clamp(42px, 8vw, 72px); font-weight: 900; letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.5rem; text-align: center; }
-    .logo-dark { color: #f0f0f0; }
-    .logo-files { color: #6b21a8; }
-    #tagline { font-size: 11px; color: #444; letter-spacing: 0.2em; text-transform: uppercase; text-align: center; margin-bottom: 0.9rem; }
-    .twitch-link {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: #0e0e1a; border: 0.5px solid #1e1e2e; border-radius: 20px;
-      padding: 6px 14px; margin-bottom: 2.8rem; text-decoration: none;
+    @keyframes glitch-text2{
+      0%{text-shadow:-2px 0 #f0f0f0,2px 0 #7c3aed;clip-path:inset(60% 0 20% 0)}
+      50%{text-shadow:2px -1px #f0f0f0;clip-path:inset(20% 0 70% 0)}
+      100%{text-shadow:none;clip-path:none}
     }
-    .twitch-icon { width: 14px; height: 14px; fill: #9147ff; }
-    .twitch-name { font-size: 12px; color: #9147ff; letter-spacing: 0.05em; }
-    .countdown { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 2.8rem; }
-    .unit { display: flex; flex-direction: column; align-items: center; }
-    .box {
-      background: #0c0c18; border: 0.5px solid #1a1a2a; border-radius: 8px;
-      padding: 18px 6px 14px; min-width: 80px; text-align: center; position: relative;
-    }
-    .box::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 1px; background: #6b21a8; border-radius: 0 0 8px 8px; opacity: 0.6;
-    }
-    .num { font-size: 40px; font-weight: 800; color: #f0f0f0; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-family: 'Courier New', monospace; }
-    .lbl { font-size: 9px; letter-spacing: 0.22em; color: #3a3a4a; text-transform: uppercase; margin-top: 6px; }
-    .sep { font-size: 30px; font-weight: 700; color: #1e1e2e; margin-top: 16px; line-height: 1; user-select: none; }
-    .progress-track { width: 300px; height: 2px; background: #12121e; border-radius: 1px; margin-bottom: 2.5rem; }
-    .progress-fill { height: 2px; background: #6b21a8; border-radius: 1px; width: 0%; transition: width 0.8s linear; }
-    .status { display: flex; align-items: center; gap: 8px; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: #6b21a8; animation: blink 1.5s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
-    .status-text { font-size: 10px; letter-spacing: 0.25em; color: #2e2e3e; text-transform: uppercase; }
-    #reveal-content { display: none; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; }
-    .ended-msg { font-size: 28px; font-weight: 800; color: #6b21a8; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; }
-    #reveal-text { font-size: 16px; color: #ccc; text-align: center; max-width: 480px; line-height: 1.7; letter-spacing: 0.02em; display: none; }
-    #reveal-link { display: none; margin-top: 0.5rem; padding: 10px 28px; background: #6b21a8; color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border-radius: 4px; }
-    @media (max-width: 480px) {
-      .box { min-width: 64px; padding: 14px 4px 10px; }
-      .num { font-size: 30px; }
-      .countdown { gap: 6px; }
-      .progress-track { width: 240px; }
+
+    #tagline{font-size:11px;color:#444;letter-spacing:0.2em;text-transform:uppercase;text-align:center;margin-bottom:0.9rem}
+
+    .twitch-link{display:inline-flex;align-items:center;gap:7px;background:#0e0e1a;border:0.5px solid #1e1e2e;border-radius:20px;padding:6px 14px;margin-bottom:2rem;text-decoration:none;transition:border-color 0.2s}
+    .twitch-link:hover{border-color:#6b21a8}
+    .twitch-icon{width:14px;height:14px;fill:#9147ff}
+    .twitch-name{font-size:12px;color:#9147ff;letter-spacing:0.05em}
+
+    /* COUNTDOWN */
+    .countdown{display:flex;gap:10px;align-items:flex-start;margin-bottom:2rem;flex-wrap:wrap;justify-content:center}
+    .unit{display:flex;flex-direction:column;align-items:center}
+    .box{background:#0c0c18;border:0.5px solid #1a1a2a;border-radius:8px;padding:18px 6px 14px;min-width:80px;text-align:center;position:relative}
+    .box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:#6b21a8;border-radius:0 0 8px 8px;opacity:0.6}
+    .num{font-size:40px;font-weight:800;color:#f0f0f0;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;font-family:'Courier New',monospace}
+    .lbl{font-size:9px;letter-spacing:0.22em;color:#3a3a4a;text-transform:uppercase;margin-top:6px}
+    .sep{font-size:30px;font-weight:700;color:#1e1e2e;margin-top:16px;line-height:1;user-select:none}
+
+    .progress-track{width:300px;max-width:90vw;height:2px;background:#12121e;border-radius:1px;margin-bottom:2rem}
+    .progress-fill{height:2px;background:#6b21a8;border-radius:1px;width:0%;transition:width 0.8s linear}
+
+    .status{display:flex;align-items:center;gap:8px;margin-bottom:2rem}
+    .dot{width:6px;height:6px;border-radius:50%;background:#6b21a8;animation:blink 1.5s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.15}}
+    .status-text{font-size:10px;letter-spacing:0.25em;color:#2e2e3e;text-transform:uppercase}
+
+    /* CLUES */
+    #clues-section{width:100%;max-width:500px;margin-bottom:2rem;display:none;flex-direction:column;gap:10px}
+    .clue-item{background:#0e0e1a;border:0.5px solid #2a1a3a;border-left:2px solid #6b21a8;border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:#ccc;letter-spacing:0.03em;animation:fadeInUp 0.5s ease forwards;opacity:0}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .clue-label{font-size:9px;letter-spacing:0.2em;color:#6b21a8;text-transform:uppercase;margin-bottom:4px}
+
+    /* FOLLOWER BAR */
+    #follower-section{width:100%;max-width:400px;margin-bottom:2rem;display:none}
+    .follower-label{font-size:10px;letter-spacing:0.2em;color:#444;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between}
+    .follower-track{width:100%;height:4px;background:#12121e;border-radius:2px}
+    .follower-fill{height:4px;background:linear-gradient(90deg,#6b21a8,#a855f7);border-radius:2px;transition:width 1s ease}
+
+    /* SOCIAL BUTTONS */
+    .social-row{display:flex;gap:10px;margin-bottom:2.5rem;flex-wrap:wrap;justify-content:center}
+    .social-btn{display:inline-flex;align-items:center;gap:6px;background:#0e0e1a;border:0.5px solid #1e1e2e;border-radius:20px;padding:7px 16px;text-decoration:none;font-size:12px;color:#ccc;letter-spacing:0.05em;transition:border-color 0.2s,color 0.2s;cursor:pointer}
+    .social-btn:hover{border-color:#6b21a8;color:#fff}
+    .social-btn svg{width:14px;height:14px;flex-shrink:0}
+
+    /* SOUND TOGGLE */
+    #sound-btn{position:fixed;bottom:24px;right:24px;z-index:10;background:#0e0e1a;border:0.5px solid #1e1e2e;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s}
+    #sound-btn:hover{border-color:#6b21a8}
+    #sound-btn svg{width:16px;height:16px;fill:#555}
+    #sound-btn.active svg{fill:#6b21a8}
+
+    /* REVEAL */
+    #reveal-content{display:none;flex-direction:column;align-items:center;gap:1rem;margin-top:1rem}
+    .ended-msg{font-size:28px;font-weight:800;color:#6b21a8;letter-spacing:0.08em;text-transform:uppercase;text-align:center}
+    #reveal-text{font-size:16px;color:#ccc;text-align:center;max-width:480px;line-height:1.7;display:none}
+    #reveal-link{display:none;margin-top:0.5rem;padding:10px 28px;background:#6b21a8;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;border-radius:4px}
+
+    /* FOOTER */
+    footer{position:relative;z-index:3;padding:1.5rem;text-align:center;margin-top:auto;width:100%}
+    footer a{font-size:10px;letter-spacing:0.15em;color:#2a2a3a;text-transform:uppercase;text-decoration:none;margin:0 12px;transition:color 0.2s}
+    footer a:hover{color:#6b21a8}
+
+    /* MOBILE */
+    @media(max-width:480px){
+      .box{min-width:64px;padding:14px 4px 10px}
+      .num{font-size:30px}
+      .countdown{gap:6px}
+      .progress-track{width:260px}
+      .social-row{gap:8px}
+      .social-btn{font-size:11px;padding:6px 12px}
     }
   </style>
 </head>
 <body>
+  <canvas id="particles"></canvas>
   <div class="scanlines"></div>
   <div class="corner tl"></div><div class="corner tr"></div>
   <div class="corner bl"></div><div class="corner br"></div>
 
-  <!-- ANNOUNCEMENT BANNER -->
   <div id="announcement-banner">
     <span id="banner-text"></span>
-    <a id="banner-link" href="#" style="display:none;"></a>
+    <a id="banner-link" href="#" style="display:none"></a>
     <button id="banner-close" onclick="closeBanner()">&#x2715;</button>
   </div>
 
   <div class="content">
     <div class="eyebrow" id="eyebrow-text">classified &nbsp;///&nbsp; eyes only</div>
-    <div class="logo"><span class="logo-dark">DARK</span><span class="logo-files"> FILES</span></div>
+
+    <div class="logo" id="logo">
+      <span class="logo-dark">DARK</span><span class="logo-files"> FILES</span>
+    </div>
+
     <div id="tagline">Friday · April 24 · 5:30 PM EST</div>
+
     <a class="twitch-link" id="twitch-link" href="https://twitch.tv/not_darkarrow" target="_blank">
       <svg class="twitch-icon" viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
       <span class="twitch-name" id="twitch-name">not_darkarrow</span>
     </a>
+
     <div class="countdown" id="countdown-wrap">
       <div class="unit"><div class="box"><div class="num" id="dd">00</div><div class="lbl">days</div></div></div>
       <div class="sep">:</div>
@@ -133,8 +162,35 @@
       <div class="sep">:</div>
       <div class="unit"><div class="box"><div class="num" id="ss">00</div><div class="lbl">secs</div></div></div>
     </div>
+
     <div class="progress-track"><div class="progress-fill" id="pbar"></div></div>
+
     <div class="status"><div class="dot"></div><span class="status-text">live countdown</span><div class="dot"></div></div>
+
+    <!-- CLUES -->
+    <div id="clues-section"></div>
+
+    <!-- FOLLOWER BAR -->
+    <div id="follower-section">
+      <div class="follower-label">
+        <span id="follower-label-text">Follower Goal</span>
+        <span id="follower-count-text">0 / 0</span>
+      </div>
+      <div class="follower-track"><div class="follower-fill" id="follower-fill"></div></div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="social-row">
+      <a class="social-btn" id="discord-btn" href="#" target="_blank" style="display:none">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Discord
+      </a>
+      <a class="social-btn" id="share-btn" onclick="shareTwitter()" href="#">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Share on X
+      </a>
+    </div>
+
     <div id="reveal-content">
       <div class="ended-msg" id="ended-msg">It's time.</div>
       <div id="reveal-text"></div>
@@ -142,87 +198,191 @@
     </div>
   </div>
 
-  <script>
-    function getSettings() {
-      try { return JSON.parse(localStorage.getItem('darkfiles_settings')) || {}; }
-      catch { return {}; }
-    }
-    const defaults = {
-      targetDate: '2026-04-24T17:30:00-05:00',
-      tagline: 'Friday · April 24 · 5:30 PM EST',
-      eyebrow: 'classified /// eyes only',
-      twitchName: 'not_darkarrow',
-      endedMessage: "It's time.",
-      revealText: '',
-      revealLinkLabel: '',
-      revealLinkURL: '',
-      announcementText: '',
-      announcementLinkLabel: '',
-      announcementLinkURL: '',
-      announcementStyle: 'red',
-      announcementEnabled: false,
-    };
-    function s(k) { const st = getSettings(); return st[k] !== undefined ? st[k] : defaults[k]; }
+  <footer>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Privacy Policy</a>
+  </footer>
 
-    document.getElementById('tagline').textContent = s('tagline');
-    document.getElementById('eyebrow-text').textContent = s('eyebrow');
-    document.getElementById('twitch-name').textContent = s('twitchName');
-    document.getElementById('twitch-link').href = 'https://twitch.tv/' + s('twitchName');
+  <!-- SOUND BUTTON -->
+  <button id="sound-btn" onclick="toggleSound()" title="Toggle ambient sound">
+    <svg id="sound-icon-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <svg id="sound-icon-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  </button>
+
+  <script>
+    // ── SETTINGS ──
+    function getSettings(){try{return JSON.parse(localStorage.getItem('darkfiles_settings'))||{};}catch{return{};}}
+    const D={
+      targetDate:'2026-04-24T17:30:00-05:00',
+      tagline:'Friday · April 24 · 5:30 PM EST',
+      eyebrow:'classified /// eyes only',
+      twitchName:'not_darkarrow',
+      endedMessage:"It's time.",
+      revealText:'',revealLinkLabel:'',revealLinkURL:'',
+      announcementText:'',announcementLinkLabel:'',announcementLinkURL:'',
+      announcementStyle:'purple',announcementEnabled:false,
+      discordURL:'',discordEnabled:false,
+      clues:[],cluesEnabled:false,
+      followerCurrent:0,followerGoal:0,followerLabel:'Follower Goal',followerEnabled:false,
+      accentColor:'#6b21a8',
+    };
+    function s(k){const st=getSettings();return st[k]!==undefined?st[k]:D[k];}
+
+    // ── ACCENT COLOR ──
+    function applyAccent(color){
+      document.querySelectorAll('.corner').forEach(el=>el.style.cssText+=`;border-color:${color}`);
+      document.getElementById('pbar').style.background=color;
+      document.querySelectorAll('.box::after').forEach(el=>{});
+      document.querySelectorAll('.dot').forEach(el=>el.style.background=color);
+      document.querySelector('.logo-files').style.color=color;
+      document.querySelector('.follower-fill') && (document.querySelector('.follower-fill').style.background=`linear-gradient(90deg,${color},#a855f7)`);
+      const style=document.getElementById('accent-style')||document.createElement('style');
+      style.id='accent-style';
+      style.textContent=`.box::after{background:${color}!important}.corner{border-color:${color}!important}.dot{background:${color}!important}.logo-files{color:${color}!important}#pbar{background:${color}!important}.clue-label,.clue-item{border-left-color:${color}!important}.follower-fill{background:linear-gradient(90deg,${color},#a855f7)!important}a:hover,footer a:hover,.social-btn:hover,.twitch-link:hover{border-color:${color}!important;color:#fff!important}#sound-btn.active svg{fill:${color}!important}.ended-msg{color:${color}!important}#reveal-link{background:${color}!important}#announcement-banner.style-purple{background:${color}!important}`;
+      document.head.appendChild(style);
+    }
+    applyAccent(s('accentColor'));
+
+    // ── POPULATE PAGE ──
+    document.getElementById('tagline').textContent=s('tagline');
+    document.getElementById('eyebrow-text').textContent=s('eyebrow');
+    document.getElementById('twitch-name').textContent=s('twitchName');
+    document.getElementById('twitch-link').href='https://twitch.tv/'+s('twitchName');
+
+    // Discord
+    if(s('discordEnabled')&&s('discordURL')){
+      const db=document.getElementById('discord-btn');
+      db.href=s('discordURL');db.style.display='inline-flex';
+    }
+
+    // Clues
+    if(s('cluesEnabled')&&s('clues').length){
+      const sec=document.getElementById('clues-section');
+      sec.style.display='flex';
+      s('clues').forEach((c,i)=>{
+        const el=document.createElement('div');
+        el.className='clue-item';
+        el.style.animationDelay=(i*0.15)+'s';
+        el.innerHTML=`<div class="clue-label">Clue #${i+1}</div>${c}`;
+        sec.appendChild(el);
+      });
+    }
+
+    // Follower bar
+    if(s('followerEnabled')&&s('followerGoal')>0){
+      const fs=document.getElementById('follower-section');
+      fs.style.display='block';
+      document.getElementById('follower-label-text').textContent=s('followerLabel')||'Follower Goal';
+      document.getElementById('follower-count-text').textContent=s('followerCurrent').toLocaleString()+' / '+s('followerGoal').toLocaleString();
+      const pct=Math.min(100,(s('followerCurrent')/s('followerGoal'))*100);
+      setTimeout(()=>{document.getElementById('follower-fill').style.width=pct+'%';},200);
+    }
 
     // Announcement banner
-    function loadBanner() {
-      const dismissed = sessionStorage.getItem('banner_dismissed');
-      if (s('announcementEnabled') && s('announcementText') && !dismissed) {
-        const banner = document.getElementById('announcement-banner');
-        banner.className = 'style-' + (s('announcementStyle') || 'red');
-        document.getElementById('banner-text').textContent = s('announcementText');
-        const linkURL = s('announcementLinkURL');
-        const linkLabel = s('announcementLinkLabel');
-        if (linkURL) {
-          const a = document.getElementById('banner-link');
-          a.href = linkURL;
-          a.textContent = linkLabel || 'Learn more';
-          a.target = '_blank';
-          a.style.display = 'inline';
+    function loadBanner(){
+      const dismissed=sessionStorage.getItem('banner_dismissed');
+      if(s('announcementEnabled')&&s('announcementText')&&!dismissed){
+        const b=document.getElementById('announcement-banner');
+        b.className='style-'+(s('announcementStyle')||'purple');
+        document.getElementById('banner-text').textContent=s('announcementText');
+        if(s('announcementLinkURL')){
+          const a=document.getElementById('banner-link');
+          a.href=s('announcementLinkURL');a.textContent=s('announcementLinkLabel')||'Learn more';
+          a.target='_blank';a.style.display='inline';
         }
-        banner.style.display = 'block';
-        document.body.style.paddingTop = banner.offsetHeight + 'px';
+        b.style.display='block';
+        document.body.style.paddingTop=b.offsetHeight+'px';
       }
     }
-    function closeBanner() {
-      document.getElementById('announcement-banner').style.display = 'none';
-      document.body.style.paddingTop = '0';
-      sessionStorage.setItem('banner_dismissed', '1');
+    function closeBanner(){
+      document.getElementById('announcement-banner').style.display='none';
+      document.body.style.paddingTop='0';
+      sessionStorage.setItem('banner_dismissed','1');
     }
     loadBanner();
 
-    const target = new Date(s('targetDate')).getTime();
-    const totalMs = Math.max(1, target - Date.now());
-    function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
-    function tick() {
-      const diff = target - Date.now();
-      if (diff <= 0) {
-        document.getElementById('countdown-wrap').style.display = 'none';
-        document.querySelector('.progress-track').style.display = 'none';
-        document.querySelector('.status').style.display = 'none';
-        const rc = document.getElementById('reveal-content');
-        rc.style.display = 'flex';
-        document.getElementById('ended-msg').textContent = s('endedMessage');
-        const rt = s('revealText');
-        if (rt) { document.getElementById('reveal-text').textContent = rt; document.getElementById('reveal-text').style.display = 'block'; }
-        const rl = s('revealLinkURL');
-        if (rl) { const a = document.getElementById('reveal-link'); a.href = rl; a.textContent = s('revealLinkLabel') || 'Go'; a.style.display = 'inline-block'; }
-        document.getElementById('pbar').style.width = '100%';
-        return;
+    // ── COUNTDOWN ──
+    const target=new Date(s('targetDate')).getTime();
+    const totalMs=Math.max(1,target-Date.now());
+    function pad(n){return String(Math.max(0,n)).padStart(2,'0');}
+    function tick(){
+      const diff=target-Date.now();
+      if(diff<=0){
+        document.getElementById('countdown-wrap').style.display='none';
+        document.querySelector('.progress-track').style.display='none';
+        document.querySelector('.status').style.display='none';
+        const rc=document.getElementById('reveal-content');rc.style.display='flex';
+        document.getElementById('ended-msg').textContent=s('endedMessage');
+        const rt=s('revealText');if(rt){document.getElementById('reveal-text').textContent=rt;document.getElementById('reveal-text').style.display='block';}
+        const rl=s('revealLinkURL');if(rl){const a=document.getElementById('reveal-link');a.href=rl;a.textContent=s('revealLinkLabel')||'Go';a.style.display='inline-block';}
+        document.getElementById('pbar').style.width='100%';return;
       }
-      document.getElementById('dd').textContent = pad(Math.floor(diff / 86400000));
-      document.getElementById('hh').textContent = pad(Math.floor((diff % 86400000) / 3600000));
-      document.getElementById('mm').textContent = pad(Math.floor((diff % 3600000) / 60000));
-      document.getElementById('ss').textContent = pad(Math.floor((diff % 60000) / 1000));
-      document.getElementById('pbar').style.width = Math.min(100, ((totalMs - diff) / totalMs) * 100).toFixed(2) + '%';
+      document.getElementById('dd').textContent=pad(Math.floor(diff/86400000));
+      document.getElementById('hh').textContent=pad(Math.floor((diff%86400000)/3600000));
+      document.getElementById('mm').textContent=pad(Math.floor((diff%3600000)/60000));
+      document.getElementById('ss').textContent=pad(Math.floor((diff%60000)/1000));
+      document.getElementById('pbar').style.width=Math.min(100,((totalMs-diff)/totalMs)*100).toFixed(2)+'%';
     }
-    tick();
-    setInterval(tick, 1000);
+    tick();setInterval(tick,1000);
+
+    // ── GLITCH LOGO ──
+    const logo=document.getElementById('logo');
+    function triggerGlitch(){logo.classList.add('glitching');setTimeout(()=>logo.classList.remove('glitching'),400);}
+    setInterval(()=>{if(Math.random()<0.3)triggerGlitch();},3000);
+    logo.addEventListener('mouseenter',triggerGlitch);
+
+    // ── PARTICLES ──
+    const canvas=document.getElementById('particles');
+    const ctx=canvas.getContext('2d');
+    let particles=[];
+    function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    resizeCanvas();window.addEventListener('resize',resizeCanvas);
+    const accentHex=s('accentColor')||'#6b21a8';
+    for(let i=0;i<60;i++){
+      particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.5+0.3,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,a:Math.random()*0.4+0.05});
+    }
+    function drawParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=accentHex+(Math.floor(p.a*255).toString(16).padStart(2,'0'));
+        ctx.fill();
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // ── AMBIENT SOUND ──
+    let audioCtx=null,gainNode=null,soundOn=false;
+    function buildAudio(){
+      audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+      gainNode=audioCtx.createGain();gainNode.gain.value=0;gainNode.connect(audioCtx.destination);
+      function makeOsc(freq,type,gain){
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type=type;o.frequency.value=freq;g.gain.value=gain;
+        o.connect(g);g.connect(gainNode);o.start();
+      }
+      makeOsc(55,'sine',0.3);makeOsc(110,'sine',0.15);makeOsc(27.5,'triangle',0.1);
+    }
+    function toggleSound(){
+      if(!audioCtx)buildAudio();
+      soundOn=!soundOn;
+      gainNode.gain.linearRampToValueAtTime(soundOn?0.12:0,audioCtx.currentTime+1.5);
+      const btn=document.getElementById('sound-btn');
+      document.getElementById('sound-icon-on').style.display=soundOn?'block':'none';
+      document.getElementById('sound-icon-off').style.display=soundOn?'none':'block';
+      btn.classList.toggle('active',soundOn);
+    }
+
+    // ── SHARE ──
+    function shareTwitter(){
+      const url=encodeURIComponent(window.location.href);
+      const text=encodeURIComponent("Something big is dropping at Dark Files 👀 "+window.location.href);
+      window.open('https://twitter.com/intent/tweet?text='+text,'_blank');
+    }
   </script>
 </body>
 </html>
