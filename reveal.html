@@ -25,6 +25,12 @@
     #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
     .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.05) 3px,rgba(0,0,0,0.05) 4px);pointer-events:none;z-index:1}
 
+    /* FAN MADE BAR */
+    #fanmade-bar{position:fixed;bottom:0;left:0;right:0;z-index:60;background:#0a0a14;border-top:.5px solid #1e1e2e;padding:8px 1.5rem;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:11px;color:#444;letter-spacing:0.04em;text-align:center}
+    #fanmade-bar a{color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap;transition:color .2s}
+    #fanmade-bar a:hover{color:var(--accent2)}
+    body{padding-bottom:44px}
+
     /* NAV */
     nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(8,8,16,0.92);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px}
     .nav-logo{font-size:16px;font-weight:900;letter-spacing:-0.02em;text-decoration:none;color:var(--text)}
@@ -155,6 +161,12 @@
   <div class="scanlines"></div>
   <div id="cur"></div>
   <div id="curdot"></div>
+
+  <!-- FAN MADE BANNER -->
+  <div id="fanmade-bar">
+    <span>⚠️ This is an unofficial fan-made site. Not affiliated with or endorsed by not_darkarrow.</span>
+    <a id="fanmade-twitch" href="https://twitch.tv/not_darkarrow" target="_blank">Visit Official Twitch →</a>
+  </div>
 
   <!-- NAV -->
   <nav>
@@ -295,11 +307,15 @@
   <footer>
     <div class="footer-logo">DARK <span>FILES</span></div>
     <div style="font-size:12px;color:var(--muted);margin-top:4px">not_darkarrow</div>
+    <div style="font-size:11px;color:#2a2a3a;margin-top:8px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6">
+      This is an unofficial fan-made site created by the community. It is not affiliated with, endorsed by, or connected to not_darkarrow in any official capacity. All content relating to not_darkarrow belongs to their respective owner.
+    </div>
     <div class="footer-links">
       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a>
       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Privacy Policy</a>
+      <span class="zenian-badge" onclick="openZenian()">⚡ Zenian</span>
     </div>
-    <div class="footer-copy">© 2026 not_darkarrow. All rights reserved.</div>
+    <div class="footer-copy">Fan-made site — not affiliated with not_darkarrow</div>
   </footer>
 
 <script>
@@ -337,10 +353,11 @@ function buildSocials(){
     a.innerHTML=`<div class="social-icon" style="background:${sd.color}">${sd.icon}</div><div><div class="social-name">${sd.name}</div><div class="social-handle">${sd.handle}</div></div>`;
     grid.appendChild(a);
   });
-  // Update nav/hero twitch link
-  const tw=st['social_twitch']||'https://twitch.tv/not_darkarrow';
-  document.getElementById('nav-twitch').href=tw;
-  document.getElementById('hero-twitch').href=tw;
+// Update fan made bar twitch link
+const tw=s('social_twitch','https://twitch.tv/not_darkarrow');
+document.getElementById('fanmade-twitch').href=tw;
+document.getElementById('nav-twitch').href=tw;
+document.getElementById('hero-twitch').href=tw;
   const dc=st['social_discord']||'';
   if(dc)document.getElementById('hero-discord').href=dc;
 }
@@ -462,5 +479,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(cards[todayIdx])cards[todayIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 });
 </script>
+<script src="zenian.js"></script>
 </body>
 </html>
