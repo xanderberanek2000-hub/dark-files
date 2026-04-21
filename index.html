@@ -136,12 +136,23 @@
     .social-btn:hover{border-color:var(--accent);color:#fff}
     .social-btn svg{width:14px;height:14px;flex-shrink:0}
 
-    /* SECRET BADGE */
-    #secret-msg{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0e0e1a;border:1px solid var(--accent);border-radius:10px;padding:2rem;z-index:999;text-align:center;max-width:320px;animation:fadeInUp 0.3s ease}
-    #secret-msg h3{color:var(--accent);font-size:16px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
-    #secret-msg p{color:#ccc;font-size:14px;line-height:1.6}
-    #secret-close{margin-top:1rem;background:var(--accent);border:none;border-radius:4px;color:#fff;padding:8px 20px;cursor:pointer;font-size:12px;letter-spacing:0.1em;text-transform:uppercase}
-    #secret-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:998}
+    /* SNAKE GAME */
+    #snake-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:998;backdrop-filter:blur(4px)}
+    #snake-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0a0a14;border:1px solid var(--accent);border-radius:12px;z-index:999;padding:1.5rem;width:min(420px,95vw)}
+    #snake-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    #snake-title{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase}
+    #snake-score-display{font-size:11px;color:#555;letter-spacing:0.08em;font-family:'Courier New',monospace}
+    #snake-close-btn{background:none;border:none;color:#444;font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;transition:color .2s}
+    #snake-close-btn:hover{color:#fff}
+    #snake-canvas{display:block;border:.5px solid #1e1e2e;border-radius:6px;background:#080810;width:100%;height:auto}
+    #snake-ui{margin-top:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    #snake-msg{font-size:11px;color:#555;letter-spacing:0.08em}
+    #snake-start-btn{background:var(--accent);border:none;border-radius:4px;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:7px 18px;cursor:pointer;transition:background .2s}
+    #snake-start-btn:hover{background:var(--accent2)}
+    #snake-controls{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:10px}
+    #snake-controls .ctrl-row{display:flex;gap:4px}
+    .ctrl-btn{width:36px;height:36px;background:#0e0e1a;border:.5px solid #1e1e2e;border-radius:6px;color:#666;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;user-select:none;-webkit-user-select:none}
+    .ctrl-btn:active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
     /* CURSOR */
     *{cursor:none!important}
@@ -192,11 +203,26 @@
     <button id="banner-close" onclick="closeBanner()">&#x2715;</button>
   </div>
 
-  <div id="secret-overlay" onclick="closeSecret()"></div>
-  <div id="secret-msg">
-    <h3>// Classified //</h3>
-    <p id="secret-text">You found it.</p>
-    <button id="secret-close" onclick="closeSecret()">Close</button>
+  <div id="snake-overlay" onclick="closeSnake()"></div>
+  <div id="snake-modal">
+    <div id="snake-header">
+      <div id="snake-title">// Snake //</div>
+      <div id="snake-score-display">SCORE: <span id="snake-score">0</span> &nbsp; BEST: <span id="snake-best">0</span></div>
+      <button id="snake-close-btn" onclick="closeSnake()">✕</button>
+    </div>
+    <canvas id="snake-canvas" width="380" height="320"></canvas>
+    <div id="snake-ui">
+      <span id="snake-msg">Click Start or press Space</span>
+      <button id="snake-start-btn" onclick="snakeStart()">Start</button>
+    </div>
+    <div id="snake-controls">
+      <div class="ctrl-row"><button class="ctrl-btn" id="btn-up" onpointerdown="snakeDir(0,-1)">▲</button></div>
+      <div class="ctrl-row">
+        <button class="ctrl-btn" id="btn-left" onpointerdown="snakeDir(-1,0)">◀</button>
+        <button class="ctrl-btn" id="btn-down" onpointerdown="snakeDir(0,1)">▼</button>
+        <button class="ctrl-btn" id="btn-right" onpointerdown="snakeDir(1,0)">▶</button>
+      </div>
+    </div>
   </div>
 
   <div class="content">
@@ -270,6 +296,7 @@
   <footer>
     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Terms of Service</a>
     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Privacy Policy</a>
+    <span class="zenian-badge" onclick="openZenian()">⚡ Zenian</span>
   </footer>
 
   <button id="sound-btn" onclick="toggleSound()" title="Toggle ambient sound">
@@ -458,20 +485,125 @@ function triggerGlitch(){logo.classList.add('glitching');setTimeout(()=>logo.cla
 setInterval(()=>{if(Math.random()<0.25)triggerGlitch();},3500);
 logo.addEventListener('mouseenter',triggerGlitch);
 
-// ── MORSE / SECRET EASTER EGG ──
+// ── SNAKE EASTER EGG ──
 let clickCount=0,clickTimer=null;
 const secretClicks=s('secretClicks')||7;
 logo.addEventListener('click',()=>{
   clickCount++;clearTimeout(clickTimer);
   clickTimer=setTimeout(()=>clickCount=0,2000);
-  if(clickCount>=secretClicks&&s('secretEnabled')){
-    clickCount=0;
-    document.getElementById('secret-text').textContent=s('secretMessage')||'You found it.';
-    document.getElementById('secret-msg').style.display='block';
-    document.getElementById('secret-overlay').style.display='block';
-  }
+  if(clickCount>=secretClicks){clickCount=0;openSnake();}
 });
-function closeSecret(){document.getElementById('secret-msg').style.display='none';document.getElementById('secret-overlay').style.display='none';}
+function openSnake(){
+  document.getElementById('snake-overlay').style.display='block';
+  document.getElementById('snake-modal').style.display='block';
+  snakeDraw();
+}
+function closeSnake(){
+  document.getElementById('snake-overlay').style.display='none';
+  document.getElementById('snake-modal').style.display='none';
+  snakeRunning=false;clearInterval(snakeLoop);
+}
+
+// ── SNAKE GAME ENGINE ──
+const SC=document.getElementById('snake-canvas');
+const SX=SC.getContext('2d');
+const COLS=19,ROWS=16,CELL=20;
+SC.width=COLS*CELL;SC.height=ROWS*CELL;
+let snake,dir,nextDir,food,snakeRunning=false,snakeLoop,score,best=0;
+
+function snakeInit(){
+  snake=[{x:9,y:8},{x:8,y:8},{x:7,y:8}];
+  dir={x:1,y:0};nextDir={x:1,y:0};
+  score=0;document.getElementById('snake-score').textContent=0;
+  spawnFood();snakeDraw();
+}
+function spawnFood(){
+  do{food={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)};}
+  while(snake.some(s=>s.x===food.x&&s.y===food.y));
+}
+function snakeDir(dx,dy){
+  if(dx!==0&&dir.x!==0)return;
+  if(dy!==0&&dir.y!==0)return;
+  nextDir={x:dx,y:dy};
+}
+function snakeStep(){
+  dir=nextDir;
+  const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+  // wall wrap
+  head.x=(head.x+COLS)%COLS;head.y=(head.y+ROWS)%ROWS;
+  // self collision
+  if(snake.some(s=>s.x===head.x&&s.y===head.y)){
+    snakeGameOver();return;
+  }
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){
+    score++;document.getElementById('snake-score').textContent=score;
+    if(score>best){best=score;document.getElementById('snake-best').textContent=best;}
+    spawnFood();
+  } else {snake.pop();}
+  snakeDraw();
+}
+function snakeDraw(){
+  const accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#6b21a8';
+  SX.fillStyle='#080810';SX.fillRect(0,0,SC.width,SC.height);
+  // grid dots
+  SX.fillStyle='#0e0e18';
+  for(let x=0;x<COLS;x++)for(let y=0;y<ROWS;y++){
+    SX.fillRect(x*CELL+CELL/2-1,y*CELL+CELL/2-1,2,2);
+  }
+  // food
+  SX.fillStyle=accent;
+  SX.shadowColor=accent;SX.shadowBlur=8;
+  SX.beginPath();SX.arc(food.x*CELL+CELL/2,food.y*CELL+CELL/2,CELL/2-3,0,Math.PI*2);SX.fill();
+  SX.shadowBlur=0;
+  // snake
+  snake.forEach((seg,i)=>{
+    const alpha=i===0?1:Math.max(0.25,1-i/snake.length*0.6);
+    SX.fillStyle=i===0?accent:`rgba(107,33,168,${alpha})`;
+    if(i===0){SX.shadowColor=accent;SX.shadowBlur=6;}
+    const pad=i===0?1:2;
+    SX.beginPath();
+    SX.roundRect(seg.x*CELL+pad,seg.y*CELL+pad,CELL-pad*2,CELL-pad*2,3);
+    SX.fill();SX.shadowBlur=0;
+  });
+  // if not running, show overlay text
+  if(!snakeRunning){
+    SX.fillStyle='rgba(8,8,16,0.6)';SX.fillRect(0,0,SC.width,SC.height);
+    SX.fillStyle=accent;SX.font='700 14px Courier New';SX.textAlign='center';
+    SX.fillText(score>0?'GAME OVER':'PRESS START',SC.width/2,SC.height/2-8);
+    if(score>0){SX.fillStyle='#555';SX.font='11px Courier New';SX.fillText('Score: '+score,SC.width/2,SC.height/2+12);}
+    SX.textAlign='left';
+  }
+}
+function snakeStart(){
+  snakeInit();snakeRunning=true;
+  clearInterval(snakeLoop);
+  snakeLoop=setInterval(snakeStep,130);
+  document.getElementById('snake-msg').textContent='Arrow keys or buttons';
+  document.getElementById('snake-start-btn').textContent='Restart';
+}
+function snakeGameOver(){
+  snakeRunning=false;clearInterval(snakeLoop);
+  document.getElementById('snake-msg').textContent='Game over! Score: '+score;
+  snakeDraw();
+}
+// keyboard
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('snake-modal').style.display||document.getElementById('snake-modal').style.display==='none')return;
+  if(e.code==='Space'){e.preventDefault();snakeStart();return;}
+  if(e.code==='ArrowUp'){e.preventDefault();snakeDir(0,-1);}
+  if(e.code==='ArrowDown'){e.preventDefault();snakeDir(0,1);}
+  if(e.code==='ArrowLeft'){e.preventDefault();snakeDir(-1,0);}
+  if(e.code==='ArrowRight'){e.preventDefault();snakeDir(1,0);}
+});
+// swipe support
+let tx=0,ty=0;
+SC.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+SC.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)){snakeDir(dx>0?1:-1,0);}else{snakeDir(0,dy>0?1:-1);}
+},{passive:true});
+snakeInit();
 
 // ── PARTICLES ──
 const canvas=document.getElementById('particles');
@@ -543,5 +675,6 @@ function shareTwitter(){
   window.open('https://twitter.com/intent/tweet?text='+text,'_blank');
 }
 </script>
+<script src="zenian.js"></script>
 </body>
 </html>
