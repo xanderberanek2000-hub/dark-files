@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dark Files — not_darkarrow</title>
+  <title>Darkarrow — not_darkarrow</title>
   <meta name="description" content="not_darkarrow — Twitch streamer & Minecraft server creator." />
-  <meta property="og:title" content="Dark Files — not_darkarrow" />
+  <meta property="og:title" content="Darkarrow — not_darkarrow" />
   <meta property="og:description" content="not_darkarrow — Twitch streamer & Minecraft server creator." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#6b21a8" />
@@ -170,7 +170,7 @@
 
   <!-- NAV -->
   <nav>
-    <a class="nav-logo" href="#hero">DARK <span>FILES</span></a>
+    <a class="nav-logo" href="#hero">DARK<span>ARROW</span></a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#schedule">Schedule</a></li>
@@ -305,7 +305,7 @@
   </section>
 
   <footer>
-    <div class="footer-logo">DARK <span>FILES</span></div>
+    <div class="footer-logo">DARK<span>ARROW</span></div>
     <div style="font-size:12px;color:var(--muted);margin-top:4px">not_darkarrow</div>
     <div style="font-size:11px;color:#2a2a3a;margin-top:8px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6">
       This is an unofficial fan-made site created by the community. It is not affiliated with, endorsed by, or connected to not_darkarrow in any official capacity. All content relating to not_darkarrow belongs to their respective owner.
@@ -315,13 +315,17 @@
       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">Privacy Policy</a>
       <span class="zenian-badge" onclick="openZenian()">⚡ Zenian</span>
     </div>
-    <div class="footer-copy">Fan-made site — not affiliated with not_darkarrow</div>
+    <div class="footer-copy">© 2026 darkarrow.lol — unofficial fan site</div>
   </footer>
 
 <script>
-// ── SETTINGS ──
-function getSettings(){try{return JSON.parse(localStorage.getItem('darkfiles_settings'))||{};}catch{return{};}}
-function s(k,def){const st=getSettings();return st[k]!==undefined?st[k]:def;}
+// ── SETTINGS via settings.js ──
+// settings.js loaded via <script>
+async function initReveal(){
+  const st = await window.DF.getSettings();
+  function s(k,def){ return st[k]!==undefined?st[k]:(def!==undefined?def:window.DF.DEFAULTS[k]); }
+
+ tag below
 
 // ── ACCENT ──
 function applyAccent(c){
@@ -461,6 +465,8 @@ function drawP(){
 }
 drawP();
 
+} // end bootPage
+
 // ── CUSTOM CURSOR ──
 const cur=document.getElementById('cur');const dot=document.getElementById('curdot');
 document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';});
@@ -479,6 +485,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(cards[todayIdx])cards[todayIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 });
 </script>
-<script src="zenian.js"></script>
+<script src="settings.js"></script>
+<script src="zenian.js">
+}
+window.addEventListener('DOMContentLoaded', initReveal);
+</script>
 </body>
 </html>
