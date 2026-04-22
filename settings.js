@@ -5,11 +5,25 @@ const _URL = "https://api.jsonbin.io/v3/b/" + _BIN;
 async function loadSettings() {
   try {
     const r = await fetch(_URL + "/latest", {
-      headers: { "X-Master-Key": _KEY, "X-Bin-Meta": "false" }
+      method: "GET",
+      headers: {
+        "X-Master-Key": _KEY,
+        "X-Bin-Meta": "false"
+      }
     });
-    if (!r.ok) return {};
-    return await r.json();
-  } catch(e) { return {}; }
+    if (!r.ok) {
+      console.warn("loadSettings failed:", r.status);
+      return {};
+    }
+    const data = await r.json();
+    // JSONBin v3 with X-Bin-Meta:false returns the record directly
+    // but sometimes still wraps it
+    if (data && typeof data === 'object' && data.record) return data.record;
+    return data || {};
+  } catch(e) {
+    console.error("loadSettings error:", e);
+    return {};
+  }
 }
 
 async function saveSettings(data) {
@@ -21,6 +35,10 @@ async function saveSettings(data) {
     },
     body: JSON.stringify(data)
   });
-  if (!r.ok) throw new Error("Save failed");
+  if (!r.ok) {
+    const txt = await r.text();
+    console.error("saveSettings failed:", r.status, txt);
+    throw new Error("Save failed: " + r.status);
+  }
   return await r.json();
 }
